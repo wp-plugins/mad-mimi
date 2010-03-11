@@ -39,18 +39,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	    function widget($args, $instance) {      
 	    	
 	    	$args = wp_parse_args( $args, $instance );
-	    	
+	    	$output = '';
 	        extract( $args );
 	        
 	        if($hide != 'yes') {
 	      
-		          echo $before_widget;
-		          echo $before_title . $title . $after_title;
-		 			
-		 				echo "\n\t".$this->mimi_signup_form($args)."\n\t";
+					$output .= $before_widget;
+					$output .= $before_title . $title . $after_title;
+						
+							$output .= "\n\t".$this->mimi_signup_form($args)."\n\t";
 						 
-		          echo $after_widget;
-		        
+					$output .= $after_widget;
+			        $output = apply_filters('mad_mimi_signup_form_widget', $output); // Since 1.1
+			        
+		         echo $output;
 			} // end if hide
 	    }
 	 	private function r($content, $echo=true) {
@@ -77,11 +79,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 					$out .= '<p>There was an error with the signup process.</p>';
 				}
 			} else { // Not been submitted
-				if(isset($_POST['signuperror'])) { $error = '<p class="madmimi_error">'.$_POST['signuperror'].'</p>';}
+				if(
+					isset($_POST['signuperror']) 
+					&& $_POST['mimi_form_id'] == $this->number // Make sure it's this form, not another Mad Mimi form.
+				) { $error = '<p class="madmimi_error">'.$_POST['signuperror'].'</p>';}
 						
 				$out .= "<form method='post'>
 					<div>";
 				
+				$error = apply_filters('mad_mimi_signup_form_error', $error); // Since 1.1
 				$out .= $error;
 				
 				if($signup_name)  { $out .=	"		<label for='signup_name'>Name</label><br /><input id='signup_name' name='signup[name]' type='text' value='{$_POST[signup][name]}' /><br />"; }
@@ -108,12 +114,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				$out .=	"</div>
 				</form>";
 			}
-	
+			if($madmimi_link) {  // Since 1.1, please help support the plugin author by leaving this code intact :-)
+				$out .= '<p class="mad_mimi_link">Emails by <a href="http://bit.ly/mad-mimi" title="Mad Mimi is a simple, intelligent and powerful email marketing utility that anyone can use." >Mad Mimi</a></p>';
+			}
+			$out = apply_filters('mad_mimi_signup_form', $out); // Since 1.1
 	 		return $out;
 	 	}
 	 	
 	 	function mimi_signup_lists($args) {
-	 		$lists = $out = '';
+	 		$lists = array(); 
+	 		$out = '';
 	 		
 	 		$out .= '<input name="signup[list_name]" value="';
 	 		foreach($args as $arg => $value) {
@@ -122,7 +132,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 					$lists[] = $matches[1];
 				}	
 			}
-			$lists = implode(',',$lists);
+			if(is_array($lists)) { $lists = @implode(',',$lists); } // @ Since 1.1 to prevent error
+			else { return false; } // Since 1.1
+			
 			$out .= $lists.'" type="hidden" />';
 			return $out;
 	 	}
@@ -142,38 +154,36 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 	        mimi_show_configuration_check();
 	        
-	/*
-        if(!$finalcode && $initiated) {
-	        	$error = '<div style="border:1px solid red; margin:10px 0; background:white; padding:5px;"><p><strong>There was an error processing the form code</strong> you entered into the "Automatic Sign-up Form Code" field.</p> <p>Please make sure you\'re pasting the <a href="http://www.icontact.com/help/question.php?ID=149" rel="nofollow">iContact-generated Automatic Sign-up Form code</a>, and try again.</p><p>If you still are having problems, please <a href="http://www.seodenver.com/icontact-widget/">leave a comment on the widget page</a>.</p></div>';
-	        }
-*/
-	        
 	        ?>
 	        	<p>You can embed the form in post or page content by using the following code: <code>[madmimi id=<?php echo $madmimi_number; ?>]</code>. <?php if($madmimi_number == '#') { ?><small>(The ID will show once the widget is saved for the first time.)</small><?php } ?></p>
 	        	<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?> <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" /></label></p>
 	            <?php echo $error; ?>
 	            
-	            <p><?php $this->madmimi_make_checkbox($instance['hide'], $this->get_field_id('hide'),$this->get_field_name('hide'), 'Do not display widget in sidebar.<br /><small>If you are exclusively using the [icontact id='.$madmimi_number.'] shortcode, not the sidebar widget. Note: you can use a widget in <em>both</em> sidebar and shortcode at the same time.</small>'); ?></p>
+	            <p><?php $this->madmimi_make_checkbox($instance['hide'], $this->get_field_id('hide'),$this->get_field_name('hide'), 'Do not display widget in sidebar.<br /><small>If you are exclusively using the [madmimi id='.$madmimi_number.'] shortcode, not the sidebar widget. Note: you can use a widget in <em>both</em> sidebar and shortcode at the same time.</small>'); ?></p>
 	             
+	             <?php 
+	             	$listsList = $this->create_user_lists_list($instance, 'list'); 
+	             	if($listsList) { ?>
 	             <div>
 	             	<p><label>Select User Lists for this Form</label></p>
-	             	<?php $this->create_user_lists_list($instance, 'list'); ?>
+	             	<?php echo $listsList; ?>
 	             </div>
+	             <?php } ?>
 	             
-	             <div>
-	             	<p><label>Show the Following Fields</label></p>
+	             <fieldset style="border:1px solid #ccc; margin-bottom:1em;">
+	             	<legend style="font-size:1.2em; text-align:center;"><h4>Show the Following Fields</h4></legend>
 	             	<?php $this->create_form_fields_list($instance); ?>
-	             </div>
+	             </fieldset>
 	            <?php 
 	            	$this->madmimi_make_textfield($initiated, true, '', $instance['successredirect'], $this->get_field_id('successredirect'),$this->get_field_name('successredirect'), 'Optional subscription confirmation page (for after the contact enters their details and submits the form). <strong>Must be a complete URL</strong>, including <code>http://</code>'); 
 	            	 
 					$this->madmimi_make_textarea($initiated, true, 'You have been added to our list. Thank you for signing up.', $instance['successmessage'], $this->get_field_id('successmessage'),$this->get_field_name('successmessage'), 'Message shown on successful signup (in place of the form). <small>(HTML allowed)</small>'); 
 	            	
-	            	$this->madmimi_make_textfield($initiated, true, 'Submit', $instance['submittext'], $this->get_field_id('submittext'),$this->get_field_name('submittext'), 'Change Submit Button Text'); 
-	            	
+	            	$this->madmimi_make_textfield($initiated, true, 'Submit', $instance['submittext'], $this->get_field_id('submittext'),$this->get_field_name('submittext'), 'Change Submit Button Text'); ?>
+	            	<p><?php $this->madmimi_make_checkbox($instance['madmimi_link'], $this->get_field_id('madmimi_link'),$this->get_field_name('madmimi_link'), 'Display a link to Mad Mimi&nbsp;<img src="'.get_bloginfo('url').'/'.WPINC.'/images/smilies/icon_biggrin.gif" width="15" height="15" alt="Tanks a miwwiuns!" title="Yer relly nice, tanks yu!" /><br /><small>This link takes users to MadMimi.com, letting them know where emails will be coming from. The link also helps support the plugin author when someone clicks it.</small>'); ?></p><?php
 	    }
 	function create_form_fields_list($instance) {
-		$out = '<ul>';
+		$out = '<ul style="margin-left:1.5em;padding-top:.5em">';
 		$out .=			'<li>'.$this->madmimi_get_checkbox($instance['signup_name'], $this->get_field_id('signup_name'),$this->get_field_name('signup_name'), 'Name');
 		$out .= '</li>'.'<li>'.$this->madmimi_get_checkbox($instance['signup_phone'], $this->get_field_id('signup_phone'),$this->get_field_name('signup_phone'), 'Phone');
 		$out .= '</li>'.'<li>'.$this->madmimi_get_checkbox($instance['signup_company'], $this->get_field_id('signup_company'),$this->get_field_name('signup_company'), 'Company');
@@ -214,9 +224,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			}
 			if($list)  { $out .= '</ul>'; }
 			if($dropdown) { $out .= '</select>'; }
-		}	
-		
-		echo $out;
+			echo $out;
+		} else {
+			return(false);
+		}
 	}
 	
 	function mimi_create_checkbox($id, $name, $value, $label='') {

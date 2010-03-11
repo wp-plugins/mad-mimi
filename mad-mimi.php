@@ -4,7 +4,7 @@ Plugin Name: Mad Mimi for WordPress
 Plugin URI: http://www.seodenver.com/mad-mimi/
 Description: Add a Mad Mimi signup form to your WordPress website.
 Author: Katz Web Services, Inc.
-Version: 1.0
+Version: 1.1
 Author URI: http://katzwebservices.com
 */
 
@@ -25,7 +25,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-@include('madmimi-widget.php');
+@include('madmimi_widget.php');
 
 add_action('admin_menu', 'kws_mad_mimi_admin');
 
@@ -194,13 +194,21 @@ function madmimi_process_submissions() {
 		if($mm_debug) { echo '<pre style="text-align:left;">'.print_r($_POST, true).'</pre>'; }
 		if(isset($_POST['signup'])) {
 			if(is_email($_POST['signup']['email'])) {
-				$lists = $_POST['signup']['list_name'];
-				$lists = explode(',',$lists);
-				foreach($lists as $list) {
-					add_users_to_list(array($_POST['signup']),$list);
+				if(isset($_POST['signup']['list_name'])) { // Added 1.1
+					$lists = $_POST['signup']['list_name'];
+					$lists = explode(',',$lists);
+					foreach($lists as $list) {
+						add_users_to_list(array($_POST['signup']),$list);
+					}
+				} else { // Added 1.1 - lists aren't required anyway
+					add_users_to_list(array($_POST['signup']));
 				}
 			} else {
-				$_POST['signuperror'] = 'The email you entered is not valid.';
+				if(empty($_POST['signup']['email'])) {
+					$_POST['signuperror'] = 'Please enter your email address.';
+				} else {
+					$_POST['signuperror'] = 'The email you entered is not valid.';
+				}
 			}
 		}
 	}
