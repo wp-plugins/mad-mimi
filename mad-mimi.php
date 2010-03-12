@@ -1,12 +1,8 @@
-<?php 
-/*
-Plugin Name: Mad Mimi for WordPress
-Plugin URI: http://www.seodenver.com/mad-mimi/
-Description: Add a Mad Mimi signup form to your WordPress website.
-Author: Katz Web Services, Inc.
-Version: 1.1
-Author URI: http://katzwebservices.com
-*/
+<?php
+/**
+ * @package WordPress
+ * @subpackage Mad Mimi for WordPress
+ */
 
 /*
 Copyright 2010 Katz Web Services, Inc.  (email: info@katzwebservices.com)
@@ -25,336 +21,284 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-@include('madmimi_widget.php');
-
-add_action('admin_menu', 'kws_mad_mimi_admin');
-
-function kws_mad_mimi_admin() {
-    add_options_page('Mad Mimi', 'Mad Mimi', 'administrator', 'mad-mimi', 'mad_mimi_page');  
-}
-
-add_filter( 'plugin_action_links', 'kws_mad_mimi_settings_link', 10, 2 );
-
-function kws_mad_mimi_settings_link( $links, $file ) {
-	static $this_plugin;
-	 if( ! $this_plugin ) $this_plugin = plugin_basename(__FILE__);
-	if ( $file == $this_plugin ) {
-		$settings_link = '<a href="' . admin_url( 'options-general.php?page=mad-mimi' ) . '">' . __('Settings') . '</a>';
-		array_unshift( $links, $settings_link ); // before other links
+	add_action( 'widgets_init', 'madmimi_load_widget' );
+	
+	function madmimi_load_widget() {
+		register_widget( 'MadMimiWidget' );
 	}
-	return $links;
-}
-
-add_action('plugins_loaded', 'madmimi_register_widgets');
-function madmimi_register_widgets(){
-
-	if (!function_exists('register_sidebar_widget')) {
-		return;
-	}
-	register_sidebar_widget( 'Mad Mimi', 'madmimi_display_widget');
-}
-
-function madmimi_shortcode($atts){
-	madmimi_display_widget();
-}
-add_shortcode('madmimi_widget', 'madmimi_display_widget');
-
-
-
-global $user, $api, $ty;
-add_option('mad_mimi_username', '');
-add_option('mad_mimi_api', '');
-add_option('ty_page', '');
-$api = get_option('mad_mimi_api');
-$user = get_option('mad_mimi_username');
-$ty = get_option('mad_mimi_ty_page');
-
-function mad_mimi_page() {
-	?>
-<div class="wrap">
-	<h2>Mad Mimi for WordPress</h2>
-	<div class="postbox-container" style="width:65%;">
-		<div class="metabox-holder">	
-			<div class="meta-box-sortables">
-				<form action="options.php" method="post">
-					<?php wp_nonce_field('update-options'); ?>
-				<?php 
-					mimi_show_configuration_check(false);
-					
-					$rows[] = array(
-							'id' => 'mad_mimi_username',
-							'label' => 'Mad Mimi Username',
-							'content' => "<input type='text' name='mad_mimi_username' id='mad_mimi_username' value='".esc_attr(get_option('mad_mimi_username'))."' size='40' />",
-							'desc' => 'Your Mad Mimi username (your account email address)'
-						);
+	
+	
+	class MadMimiWidget extends WP_Widget {
+	 
+	    function MadMimiWidget() {
+	    	$widget_options = array('description'=>'Add a Mad Mimi form to your and start adding to your lists!', 'classname' => 'madmimi');
+	        parent::WP_Widget(false, $name = 'Mad Mimi Signup Form', $widget_options);
+	    }
+	 
+	 
+	    function widget($args, $instance) {      
+	    	
+	    	$args = wp_parse_args( $args, $instance );
+	    	$output = '';
+	        extract( $args );
+	        
+	        if($hide != 'yes') {
+	      
+					$output .= $before_widget;
+					$output .= $before_title . $title . $after_title;
 						
-					$rows[] = array(
-							'id' => 'mad_mimi_api',
-							'label' => 'Mad Mimi API Key',
-							'desc' => 'Find your API Key at <a href="https://madmimi.com/user/edit" target="_blank">https://madmimi.com/user/edit</a>',
-							'content' => "<input type='text' name='mad_mimi_api' id='mad_mimi_api' value='".esc_attr(get_option('mad_mimi_api'))."' size='40' />"
-						);
-							
-					kws_mad_mimi_postbox('madmimisettings','Mad Mimi Settings', kws_mad_mimi_form_table($rows), false); 
-					
-				?>
-					
-					<input type="hidden" name="action" value="update" />
-					<input type="hidden" name="page_options" value="<?php foreach($rows as $row) { $output .= $row['id'].','; } echo substr($output, 0, -1);?>" />
-					<input type="hidden" name="action" value="update" />
-					<p class="submit">
-					<input type="submit" class="button-primary" name="save" value="<?php _e('Save Changes') ?>" />
-					</p>
-				</form>
-			</div>
-		</div>
-	</div>
-	<div class="postbox-container" style="width:34%;">
-		<div class="metabox-holder">	
-			<div class="meta-box-sortables">
-			<?php kws_mad_mimi_postbox('madmimihelp','Setting Up Your Form', kws_mad_mimi_configuration(), true);  ?>
-			</div>
-		</div>
-	</div>
-	
-</div>
-<?php
-	
-	
-	#create_user_lists_list();
-	
-}
-
-function kws_mad_mimi_configuration() {
-$out = <<<EOD
-
-<h4>Shortcode Use</h4>
-<ul>
-<li><code>id</code> : The ID of the <a href="widgets.php">Mad Mimi widget</a>. Each Mad Mimi widget will show you the <strong>Mad Mimi Widget ID</strong> at the top of the form.</li>
-<li><code>title</code> : Whether to show the widget title; true or false. Default: false. use <code>title=true</code> to show.</li>
-</ul>
-<h4>Sample code:</h4>
-<p><code>[madmimi id=3 title=true]</code></p>
-<p>The form generated by Mad Mimi widget ID #3 will display and show the title.</p>
-<h4>Alternate uses</h4>
-<ul style="list-style:disc outside; margin-left:2em;">
-<li>You can use <code>&lt;?php echo madmimi_show_form(array('id'=&gt;3, 'title'=>true)); ?&gt;</code> in your template code instead of the shortcode below.</li>
-<li>You can also use <code>&lt;?php echo do_shortcode('[madmimi id=3 title=true]'); ?&gt;</code> if you would like.</li>
-<li>Shortcodes work in text widgets; you can add a form to any text widget using the shortcodes.</li>
-</ul>
-
-EOD;
-return $out;
-}
-
-function mimi_show_configuration_check($link = true) {
-	if(madmimi_check_settings()) {
-    	echo '<div
-    	style="
-background-color: rgb(255, 255, 224);
-border-color: rgb(230, 219, 85);
--webkit-border-bottom-left-radius: 3px 3px;
--webkit-border-bottom-right-radius: 3px 3px;
--webkit-border-top-left-radius: 3px 3px;
--webkit-border-top-right-radius: 3px 3px;
-border-style: solid;
-border-width: 1px;
-margin: 5px 0px 15px;
-padding: 0px 0.6em;
-"
-    	><p
-    	style="line-height: 1;
-margin: 0.5em 0px;
-padding: 2px;">Your '; if($link) { echo '<a href="' . admin_url( 'options-general.php?page=mad-mimi' ) . '">'; } echo  __('Mad Mimi account settings'); if($link) { echo '</a>'; } echo ' are configured properly. You\'re ready to go.'; if(!$link) { echo ' <strong><a href="widgets.php">Configuring your forms</a>.</strong>'; } echo '</p></div>';
-    } else {
-    	
-    	echo '<div
-    	style="
-background-color: rgb(255, 235, 232);
-border-color: rgb(204, 0, 0);
--webkit-border-bottom-left-radius: 3px 3px;
--webkit-border-bottom-right-radius: 3px 3px;
--webkit-border-top-left-radius: 3px 3px;
--webkit-border-top-right-radius: 3px 3px;
-border-style: solid;
-border-width: 1px;
-margin: 5px 0px 15px;
-padding: 0px 0.6em;
-"
-    	><p
-    	style="line-height: 1;
-margin: 0.5em 0px;
-padding: 2px;">Your '; if($link) { echo '<a href="' . admin_url( 'options-general.php?page=mad-mimi' ) . '">'; } echo  __('Mad Mimi account settings') ; if($link) { echo '</a>'; } echo '  are <strong>not configured properly</strong>.</p></div>';
-    };
-}
-
-function madmimi_process_submissions() {
-	global $mm_debug;
-	if(!is_admin()) {
-		if($mm_debug) { echo '<pre style="text-align:left;">'.print_r($_POST, true).'</pre>'; }
-		if(isset($_POST['signup'])) {
-			if(is_email($_POST['signup']['email'])) {
-				if(isset($_POST['signup']['list_name'])) { // Added 1.1
-					$lists = $_POST['signup']['list_name'];
-					$lists = explode(',',$lists);
-					foreach($lists as $list) {
-						add_users_to_list(array($_POST['signup']),$list);
-					}
-				} else { // Added 1.1 - lists aren't required anyway
-					add_users_to_list(array($_POST['signup']));
+							$output .= "\n\t".$this->mimi_signup_form($args)."\n\t";
+						 
+					$output .= $after_widget;
+			        $output = apply_filters('mad_mimi_signup_form_widget', $output); // Since 1.1
+			        
+		         echo $output;
+			} // end if hide
+	    }
+	 	private function r($content, $echo=true) {
+	 			$output = '<pre>';
+	 			$output .= print_r($content, true); //print_r(mixed expression [, bool return])
+	 			$output .= '</pre>';
+	 		if($echo) {	echo $output; }
+	 		else { return $output; }
+	 	}
+	 	function mimi_signup_form($args, $shortcode_id = false, $show_title = false) {
+			if($shortcode_id) { $this->number = (int)$shortcode_id;}
+			$error = $out = '';
+			$link =true;
+			extract( $args );
+			
+			if($hide == 'yes' && $show_title && $show_title != "false" && $show_title != "0") {
+				$out .= "<h2 class='mad_mimi_title'>$title</h2>";
+			}
+			
+			if(isset($_POST['success']) && isset($_POST['mimi_form_id']) && $_POST['mimi_form_id'] == $this->number) { // The form has been submitted
+				if($_POST['success'] == 1) { // It worked
+					$out .= wpautop($successmessage); // Added wpautop() 1.2
+					$link = false; // Added 1.2
+				} else { // Didn't work
+					## Need error message
+					$out .= '<p class="madmimi_error">There was an error with the signup process.</p>';
 				}
-			} else {
-				if(empty($_POST['signup']['email'])) {
-					$_POST['signuperror'] = 'Please enter your email address.';
+			} else { // Not been submitted
+				if(
+					isset($_POST['signuperror']) 
+					&& $_POST['mimi_form_id'] == $this->number // Make sure it's this form, not another Mad Mimi form.
+				) { $error = '<p class="madmimi_error">'.$_POST['signuperror'].'</p>';}
+						
+				$out .= "<form method='post' id='mad_mimi_form{$this->number}'>
+					<div>";
+				
+				$error = apply_filters('mad_mimi_signup_form_error', $error); // Since 1.1
+				$out .= $error;
+				
+				if($signup_name)  { $out .=	"		<label for='signup_name{$this->number}'>Name</label><br /><input id='signup_name{$this->number}' name='signup[name]' type='text' value='{$_POST[signup][name]}' /><br />"; }
+				if($signup_phone)  { $out .=	"		<label for='signup_phone{$this->number}'>Phone</label><br /><input id='signup_phone{$this->number}' name='signup[phone]' type='text' value='{$_POST[signup][phone]}' /><br />"; }
+				if($signup_company)  { $out .=	"		<label for='signup_company{$this->number}'>Company</label><br /><input id='signup_company{$this->number}' name='signup[company]' type='text' value='{$_POST[signup][company]}' /><br />"; }
+				if($signup_title)  { $out .=	"		<label for='signup_title{$this->number}'>Title</label><br /><input id='signup_title{$this->number}' name='signup[title]' type='text' value='{$_POST[signup][title]}' /><br />"; }
+				if($signup_address)  { $out .=	"		<label for='signup_address{$this->number}'>Address</label><br /><input id='signup_address{$this->number}' name='signup[address]' type='text' value='{$_POST[signup][address]}' /><br />"; }
+				if($signup_city)  { $out .=	"		<label for='signup_city{$this->number}'>City</label><br /><input id='signup_city{$this->number}' name='signup[city]' type='text' value='{$_POST[signup][city]}' /><br />"; }
+				if($signup_state)  { $out .=	"		<label for='signup_state{$this->number}'>State</label><br /><input id='signup_state{$this->number}' name='signup[state]' type='text' value='{$_POST[signup][state]}' /><br />"; }
+				if($signup_zip)  { $out .=	"		<label for='signup_zip{$this->number}'>Zip</label><br /><input id='signup_zip{$this->number}' name='signup[zip]' type='text' value='{$_POST[signup][zip]}' /><br />"; }
+				if($signup_country)  { $out .=	"		<label for='signup_country{$this->number}'>Country</label><br /><input id='signup_country{$this->number}' name='signup[country]' type='text' value='{$_POST[signup][country]}' /><br />"; }
+				$out .=	"		<label for='signup_email{$this->number}'>Email<span class='required' title='This field is required'>*</span></label><br /><input id='signup_email{$this->number}' name='signup[email]' type='text' value='{$_POST[signup][email]}' /><br />";
+				
+				$out .=	"		<input name='commit' class='button' type='submit' value='$submittext' />";
+				if(!empty($successredirect)) { 
+					$successredirect = urlencode($successredirect);  
+					$out .= "<input type='hidden' name='signup[redirect]' value='$successredirect' />";
+				}
+
+				$out .= '<input type="hidden" id="mimi_form_id" name="mimi_form_id" value="'.$this->number.'" />';
+				
+				$out .= $this->mimi_signup_lists($args);
+				
+				$out .=	"</div>
+				</form>";
+			}
+			if($link && $madmimi_link) {  // Since 1.1, please help support the plugin author by leaving this code intact :-)
+				$out .= '<p class="mad_mimi_link">Emails by <a href="http://bit.ly/mad-mimi" title="Mad Mimi is a simple, intelligent and powerful email marketing utility that anyone can use." >Mad Mimi</a></p>';
+			}
+			$out = apply_filters('mad_mimi_signup_form', $out); // Since 1.1
+	 		return $out;
+	 	}
+	 	
+	 	function mimi_signup_lists($args) {
+	 		$lists = array(); 
+	 		$out = '';
+	 		
+	 		$out .= '<input name="signup[list_name]" value="';
+	 		foreach($args as $arg => $value) {
+				preg_match('/list\-(.+)/', $arg, $matches);
+				if(!empty($matches[0])) {
+					$lists[] = $matches[1];
+				}	
+			}
+			if(is_array($lists)) { $lists = @implode(',',$lists); } // @ Since 1.1 to prevent error
+			else { $lists = ''; } // Since 1.1, updated 1.2 to blank instead of false
+			
+			$out .= $lists.'" type="hidden" />';
+			return $out;
+	 	}
+	 	
+	    function update($new_instance, $old_instance) {
+			$new_instance['initiated'] = true;
+	       	return $new_instance;
+	    }
+	 
+	    function form($instance) {
+	    	
+	        $title = esc_attr($instance['title']);
+	        $formcode = $instance['formcode'];
+	        $inputsize = $instance['inputsize'];
+	        if(is_int($this->number) || !$this->number) { $madmimi_number = $this->number; echo '<p><strong>Mad Mimi Widget ID='.$madmimi_number.'</strong></p>'; } else { $madmimi_number = '#';}
+	        if(isset($instance['initiated'])) { $initiated = true; } else { $initiated=false;}
+
+	        mimi_show_configuration_check();
+	        
+	        ?>
+	        	<p>You can embed the form in post or page content by using the following code: <code>[madmimi id=<?php echo $madmimi_number; ?>]</code>. <?php if($madmimi_number == '#') { ?><small>(The ID will show once the widget is saved for the first time.)</small><?php } ?></p>
+	        	<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?> <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" /></label></p>
+	            <?php echo $error; ?>
+	            
+	             <?php 
+	             	$listsList = $this->create_user_lists_list($instance, 'list'); 
+	             	if($listsList) { ?>
+			             <fieldset style="border:1px solid #ccc; margin-bottom:1em;">
+			             	<legend style="font-size:1.2em; text-align:center;"><h4>Select User Lists for this Form</h4></legend>
+			             	<p style="padding:.5em 1em 0;">When filling out the form, users will be added to the following lists. If none selected, they will be added to your general Audience list.</p>
+				             <?php echo $listsList; ?>
+			             </fieldset>
+	             <?php } ?>
+	             
+	             <fieldset style="border:1px solid #ccc; margin-bottom:1em;">
+	             	<legend style="font-size:1.2em; text-align:center;"><h4>Show the Following Fields</h4></legend>
+	             	<?php $this->create_form_fields_list($instance); ?>
+	             </fieldset>
+	            <?php 
+	            	$this->madmimi_make_textfield($initiated, true, '', $instance['successredirect'], $this->get_field_id('successredirect'),$this->get_field_name('successredirect'), 'Optional subscription confirmation page (for after the contact enters their details and submits the form). <strong>Must be a complete URL</strong>, including <code>http://</code>'); 
+	            	 
+					$this->madmimi_make_textarea($initiated, true, 'You have been added to our list. Thank you for signing up.', $instance['successmessage'], $this->get_field_id('successmessage'),$this->get_field_name('successmessage'), 'Message shown on successful signup (in place of the form). <small>(HTML allowed)</small>'); 
+	            	
+	            	$this->madmimi_make_textfield($initiated, true, 'Submit', $instance['submittext'], $this->get_field_id('submittext'),$this->get_field_name('submittext'), 'Change Submit Button Text'); ?>
+	            	<p><?php $this->madmimi_make_checkbox($instance['hide'], $this->get_field_id('hide'),$this->get_field_name('hide'), 'Do not display widget in sidebar.<br /><small>If you are exclusively using the [madmimi id='.$madmimi_number.'] shortcode, not the sidebar widget. Note: you can use a widget in <em>both</em> sidebar and shortcode at the same time.</small>'); ?></p>
+	            	
+	            	<p><?php $this->madmimi_make_checkbox($instance['madmimi_link'], $this->get_field_id('madmimi_link'),$this->get_field_name('madmimi_link'), 'Display a link to Mad Mimi&nbsp;<img src="'.get_bloginfo('url').'/'.WPINC.'/images/smilies/icon_biggrin.gif" width="15" height="15" alt="Tanks a miwwiuns!" title="Yer relly nice, tanks yu!" /><br /><small>This link takes users to MadMimi.com, letting them know where emails will be coming from. The link also helps support the plugin author when someone clicks it.</small>'); ?></p><?php
+	    }
+	function create_form_fields_list($instance) {
+		$out = '<ul style="margin-left:1.5em;padding-top:.5em">';
+		$out .=			'<li>'.$this->madmimi_get_checkbox($instance['signup_name'], $this->get_field_id('signup_name'),$this->get_field_name('signup_name'), 'Name');
+		$out .= '</li>'.'<li>'.$this->madmimi_get_checkbox($instance['signup_phone'], $this->get_field_id('signup_phone'),$this->get_field_name('signup_phone'), 'Phone');
+		$out .= '</li>'.'<li>'.$this->madmimi_get_checkbox($instance['signup_company'], $this->get_field_id('signup_company'),$this->get_field_name('signup_company'), 'Company');
+		$out .= '</li>'.'<li>'.$this->madmimi_get_checkbox($instance['signup_title'], $this->get_field_id('signup_title'),$this->get_field_name('signup_title'), 'Title');
+		$out .= '</li>'.'<li>'.$this->madmimi_get_checkbox($instance['signup_address'], $this->get_field_id('signup_address'),$this->get_field_name('signup_address'), 'Address');
+		$out .= '</li>'.'<li>'.$this->madmimi_get_checkbox($instance['signup_city'], $this->get_field_id('signup_city'),$this->get_field_name('signup_city'), 'City');
+		$out .= '</li>'.'<li>'.$this->madmimi_get_checkbox($instance['signup_state'], $this->get_field_id('signup_state'),$this->get_field_name('signup_state'), 'State');
+		$out .= '</li>'.'<li>'.$this->madmimi_get_checkbox($instance['signup_zip'], $this->get_field_id('signup_zip'),$this->get_field_name('signup_zip'), 'Zip');
+		$out .= '</li>'.'<li>'.$this->madmimi_get_checkbox($instance['signup_country'], $this->get_field_id('signup_country'),$this->get_field_name('signup_country'), 'Country');
+		$out .= '</li>'.'<li>'.$this->madmimi_get_checkbox($instance['signup_email'], $this->get_field_id('signup_email'),$this->get_field_name('signup_email'), 'Email', true,true);
+		$out .= '</ul>';
+		echo $out;
+	}
+	function create_user_lists_list($instance, $type = 'checkbox') {
+		#global $instance;
+		$dropdown = $list = $xml = false;
+		if($type == 'dropdown') { $dropdown = true; }
+		if($type == 'list') { $list = true; }
+		
+		$response = get_user_lists();
+	
+		if(function_exists('simplexml_load_string') && 1 ==2) {
+			$xml = simplexml_load_string($response);
+		} else { // Since 1.2
+			echo madmimi_make_notice_box('<strong>This plugin requires PHP5 for user list management</strong>. Your web host does not support PHP5.<br /><br />Everything else should work in the plugin except for being able to define what lists a user will be added to upon signup.<br /><br /><strong>You may contact your hosting company</strong> and ask if they can upgrade your PHP version to PHP5; generally this is done at no cost.');
+		}
+				
+		if($xml && is_object($xml) && sizeof($xml->list) > 0) { // Updated 1.2
+			if($dropdown) { $out = '<select>'; }
+			if($list)  { $out = '<ul style="margin-left:1.5em;">'; }
+			foreach($xml->list as $l) {
+				$a = $l->attributes();
+				
+				if($dropdown) { 
+					$out .= $this->mimi_create_option($a['name'],$a['id']);
 				} else {
-					$_POST['signuperror'] = 'The email you entered is not valid.';
+					#$out .= $this->madmimi_make_checkbox('list', $a['name'],$a['id']);
+					if($list)  {$out .= '<li>'; }
+					$out .= $this->madmimi_get_checkbox($instance['list-'.strtolower($a['name'])], $this->get_field_id('list-'.strtolower($a['name'])),$this->get_field_name('list-'.strtolower($a['name'])), $a['name'], $a['name']);
+					if($list)  {$out .= '</li>'; }
 				}
 			}
+			if($list)  { $out .= '</ul>'; }
+			if($dropdown) { $out .= '</select>'; }
+			return $out;
+		} else {
+			return false;
 		}
 	}
-}
-add_action('init', 'madmimi_process_submissions',1);
-
-/*
-*
-* This redirects the user if there is a valid redirect page set up
-* in the widget settings. If not, wp_redirect just doesn't do anything.
-* For some reason, it needs to be set up as it is; $_POST logic is screwing it up.
-*
-*/
-function madmimi_redirect_preventer() {
-	if(!is_email($_POST['signup']['email'])) { 
-		return false;
-	} else {
-		return urldecode($_POST['signup']['redirect']);
+	
+	function mimi_create_checkbox($id, $name, $value, $label='') {
+		return "<label for='$id'>$label<input id='$id' name='$id\[\]' type='checkbox' value='$value' />$name</label>\n";
+	}
+	
+	function mimi_create_option($name, $value) {
+		return "<option value='$value'>$name</option>\n";
+	}
+	     
+	function madmimi_make_textfield($initiated = false, $required=false, $default, $setting = '', $fieldid = '', $fieldname='', $title = '') {
+		
+		if(!$initiated || ($required && empty($setting))) { $setting = $default; }
+	    
+		$input = '
+		<p>
+			<label for="'.$fieldid.'">'.__($title).'
+			<input type="text" class="widefat" id="'.$fieldid.'" name="'.$fieldname.'" value="'.$setting.'"/>
+			</label>
+		</p>';
+		
+		echo $input;
+	}
+	function madmimi_make_textarea($initiated = false, $required=false, $default, $setting = '', $fieldid = '', $fieldname='', $title = '') {
+		
+		if(!$initiated || ($required && empty($setting))) { $setting = $default; }
+	    
+		$input = '
+		<p>
+			<label for="'.$fieldid.'">'.__($title).'
+			<textarea class="widefat" id="'.$fieldid.'" name="'.$fieldname.'" cols="40" rows="5">'.$setting.'</textarea>
+			</label>
+		</p>';
+		
+		echo $input;
+	}
+	    
+	function madmimi_make_checkbox($setting = '', $fieldid = '', $fieldname='', $title = '', $value = 'yes', $checked = false, $disabled = false) {
+		echo $this->madmimi_get_checkbox($setting, $fieldid, $fieldname, $title, $value, $checked,$disabled);
+	}
+	function madmimi_get_checkbox($setting = '', $fieldid = '', $fieldname='', $title = '', $value = 'yes', $checked = false, $disabled = false) {
+		$checkbox = '
+			<input type="checkbox" id="'.$fieldid.'" name="'.$fieldname.'" value="'.$value.'"';
+				if($checked || !empty($setting)) { $checkbox .= ' checked="checked"'; }
+				if($disabled)  { $checkbox .= ' disabled="disabled"';}
+				$checkbox .= ' class="checkbox" />
+			<label for="'.$fieldid.'">'.__($title).'</label>';
+	    return $checkbox;
 	}	
-}
-function madmimi_redirect() {
-	wp_redirect(madmimi_redirect_preventer());
-}
-add_action('plugins_loaded','madmimi_redirect');
-
-
-function get_user_lists() {
-	global $api, $user, $ty;
 	
-	$url = 'http://madmimi.com/audience_lists/lists.xml?username='.$user.'&api_key='.$api;
-	#CURLOPT_URL
-	$ch = curl_init($url);
-	curl_setopt($ch, CURLOPT_URL, $url);
-	curl_setopt($ch, CURLOPT_HTTPGET, TRUE);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-	$response = curl_exec($ch);
-	curl_close($ch);
+} // End Class
 
-	return $response;
-}
-
-
-
-function process_emails($signup, $list = false) {
-	global $mm_debug;
-	$i = 0;
-	if(empty($signup)||!$signup) { return false; }
-	if(!is_array($signup)){ $signup = array($signup); }
-
-	foreach($signup as $s) {
-		if(is_email($s['email'])) {
-			if($i == 0) { $csv_data = "name,phone,company,title,address,city,state,zip,email,add_list\n"; }
-			
-			$csv_data .= '"';
-			if(isset($s['name'])) {		$csv_data .= htmlentities($s['name']);	}	$csv_data .= '","';
-			if(isset($s['phone'])) {	$csv_data .= htmlentities($s['phone']);	}	$csv_data .= '","';
-			if(isset($s['company'])) {	$csv_data .= htmlentities($s['company']);}	$csv_data .= '","';
-			if(isset($s['title'])) {	$csv_data .= htmlentities($s['title']);	} 	$csv_data .= '","';
-			if(isset($s['address'])) { 	$csv_data .= htmlentities($s['address']); }	$csv_data .= '","';
-			if(isset($s['city'])) {		$csv_data .= htmlentities($s['city']);	}	$csv_data .= '","';
-			if(isset($s['state'])) {	$csv_data .= htmlentities($s['state']);	}	$csv_data .= '","';
-			if(isset($s['zip'])) {		$csv_data .= htmlentities($s['zip']);	}	$csv_data .= '","';
-			$csv_data .= "{$s['email']}\",";
-			$csv_data .= '"'.$list.'"';
-			$csv_data .= "\n";
-			$i++;
-		}
+	function madmimi_show_form($atts) {
+		global $post; // prevent before content
+			$atts = extract(shortcode_atts(array('id' => '1', 'title' => false), $atts));
+			if(!is_admin()) { 
+				$shortcode_id = $id;
+				$settings = get_option('widget_madmimiwidget');
+				$form = new MadMimiWidget();
+				return $form->mimi_signup_form($settings[$id], $shortcode_id, $title);
+			} // get sidebar settings, echo finalcode
 	}
-	if($mm_debug) { 
-		echo '<pre>'.print_r($csv_data,true).'</pre>'; 
-	}
-	
-	if($i > 0) {
-		$_POST['success'] = true;
-		return $csv_data;
-	} else {
-		$_POST['success'] = false;
-		return false;
-	}
-}
 
-function madmimi_check_settings($emails=false, $list=false) {
-	global $api, $user, $ty;
+	add_shortcode('MadMimi', 'madmimi_show_form');
+	add_shortcode('madmimi', 'madmimi_show_form');
 	
-	$url = 'http://madmimi.com/audience_lists/lists.xml?username='.$user.'&api_key='.$api;
-	#CURLOPT_URL
-	$ch = curl_init($url);
-	curl_setopt($ch, CURLOPT_URL, $url);
-	curl_setopt($ch, CURLOPT_HTTPGET, TRUE);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-	$response = curl_exec($ch);
-	curl_close($ch);
-	
-	$response = simplexml_load_string($response);
-	
-	if(is_object($response)) {
-		return true;
-	} else {
-		return false;
-	}
-	
-	
-}
-
-function add_users_to_list($signup=false, $list=false) {
-	global $api, $user, $ty;
-	
-	$csv_data = process_emails($signup,$list); 
-	
-	$ch = curl_init('http://madmimi.com/audience_members');
-	curl_setopt($ch, CURLOPT_POST, TRUE);
-	curl_setopt($ch, CURLOPT_POSTFIELDS,
-	'username='.$user.'&api_key='.$api.'&csv_file='.$csv_data);
-	$response = curl_exec($ch);
-}
-
-// THANKS JOOST!
-function kws_mad_mimi_form_table($rows) {
-	$content = '<table class="form-table" width="100%">';
-	foreach ($rows as $row) {
-		$content .= '<tr><th valign="top" scope="row" style="width:50%">';
-		if (isset($row['id']) && $row['id'] != '')
-			$content .= '<label for="'.$row['id'].'" style="font-weight:bold;">'.$row['label'].':</label>';
-		else
-			$content .= $row['label'];
-		if (isset($row['desc']) && $row['desc'] != '')
-			$content .= '<br/><small>'.$row['desc'].'</small>';
-		$content .= '</th><td valign="top">';
-		$content .= $row['content'];
-		$content .= '</td></tr>'; 
-	}
-	$content .= '</table>';
-	return $content;
-}
-
-function kws_mad_mimi_postbox($id, $title, $content, $padding=false) {
-	?>
-		<div id="<?php echo $id; ?>" class="postbox">
-			<div class="handlediv" title="Click to toggle"><br /></div>
-			<h3 class="hndle"><span><?php echo $title; ?></span></h3>
-			<div class="inside" <?php if($padding) { echo 'style="padding:10px; padding-top:0;"'; } ?>>
-				<?php echo $content; ?>
-			</div>
-		</div>
-	<?php
-}
-
-
 ?>

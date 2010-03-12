@@ -29,7 +29,7 @@ This plugin adds a newsletter signup form to your website in the content and the
 	* ZIP
 	* Country
 
-<em>Note: this plugin requires a Mad Mimi account. <a href="bit.ly/mad-mimi" rel="nofollow" title="Visit MadMimi.com for a free account">Sign up for a free account here</a>.</em>
+<em>Note: this plugin requires a Mad Mimi account. <a href="bit.ly/mad-mimi" rel="nofollow">Sign up for a free account here</a>.</em>
 
 == Installation ==
 
@@ -50,12 +50,15 @@ This plugin adds a newsletter signup form to your website in the content and the
 
 == Frequently Asked Questions == 
 
+= Requires PHP5 for All Features = 
+The plugin requires PHP5 for list management functionality. If your web host does not support PHP5, please contact your host and see if they can upgrade your PHP version; generally this is done at no cost.
+
 = What is the plugin license? =
 
 * This plugin is released under a GPL license.
 
 = What is Mad Mimi? =
-Mad Mimi is the easiest email marketing tool out there. It's built from the ground up to be simple and usable. <a href="bit.ly/mad-mimi" rel="nofollow" title="Learn more about Mad Mimi at MadMimi.com">Learn more about Mad Mimi</a>.
+Mad Mimi is the easiest email marketing tool out there. It's built from the ground up to be simple and usable. <a href="bit.ly/mad-mimi" rel="nofollow">Learn more about Mad Mimi</a>.
 
 = Do I need a Mad Mimi account to use this plugin? =
 Yes, this plugin requires a Mad Mimi account. <a href="bit.ly/mad-mimi" rel="nofollow">Sign up for a free account here</a>.
@@ -80,6 +83,13 @@ You can also modify the error message by hooking into `mad_mimi_signup_form_erro
 
 == Changelog ==
 
+= 1.2 =
+* Added support for PHP4 servers. The plugin won't have the user list management functionality, but everything else should work.
+* Fixed potential error when submitting a form without a selected user list
+* Added form id to input id's to allow for better `<label>` handling
+* Added notice for users without PHP5
+* Added `wpautop()` formatting to signup success message, meaning that it will add paragraphs if none were provided
+
 = 1.1 =
 * For those experiencing the `implode()` fatal error (it even *sounds* bad!), this update should fix it thanks to an updated `mimi_signup_lists()` function in `madmimi_widget.php`.
 * Added error message check to make sure the error message displays on the form that was submitted, not another Mad Mimi form.
@@ -90,6 +100,10 @@ You can also modify the error message by hooking into `mad_mimi_signup_form_erro
 * Initial plugin release
 
 == Upgrade Notice ==
+
+= 1.2 =
+* Added support for PHP4 servers. The plugin won't have the user list management functionality, but everything else should work.
+* Fixed potential error when submitting a form without a selected user list (`ActiveRecord::RecordInvalid: Validation failed: Name can't be blank`)
 
 = 1.1 = 
 * This update should fix the `implode()` fatal error for those experiencing that error

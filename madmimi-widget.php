@@ -65,18 +65,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 	function mimi_signup_form($args, $shortcode_id = false, $show_title = false) {
 			if($shortcode_id) { $this->number = (int)$shortcode_id;}
 			$error = $out = '';
+			$link =true;
 			extract( $args );
 			
 			if($hide == 'yes' && $show_title && $show_title != "false" && $show_title != "0") {
-				$out .= "<h2>$title</h2>";
+				$out .= "<h2 class='mad_mimi_title'>$title</h2>";
 			}
 			
 			if(isset($_POST['success']) && isset($_POST['mimi_form_id']) && $_POST['mimi_form_id'] == $this->number) { // The form has been submitted
 				if($_POST['success'] == 1) { // It worked
-					$out .= $successmessage;
+					$out .= wpautop($successmessage); // Added wpautop() 1.2
+					$link = false; // Added 1.2
 				} else { // Didn't work
 					## Need error message
-					$out .= '<p>There was an error with the signup process.</p>';
+					$out .= '<p class="madmimi_error">There was an error with the signup process.</p>';
 				}
 			} else { // Not been submitted
 				if(
@@ -84,22 +86,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 					&& $_POST['mimi_form_id'] == $this->number // Make sure it's this form, not another Mad Mimi form.
 				) { $error = '<p class="madmimi_error">'.$_POST['signuperror'].'</p>';}
 						
-				$out .= "<form method='post'>
+				$out .= "<form method='post' id='mad_mimi_form{$this->number}'>
 					<div>";
 				
 				$error = apply_filters('mad_mimi_signup_form_error', $error); // Since 1.1
 				$out .= $error;
 				
-				if($signup_name)  { $out .=	"		<label for='signup_name'>Name</label><br /><input id='signup_name' name='signup[name]' type='text' value='{$_POST[signup][name]}' /><br />"; }
-				if($signup_phone)  { $out .=	"		<label for='signup_phone'>Phone</label><br /><input id='signup_phone' name='signup[phone]' type='text' value='{$_POST[signup][phone]}' /><br />"; }
-				if($signup_company)  { $out .=	"		<label for='signup_company'>Company</label><br /><input id='signup_company' name='signup[company]' type='text' value='{$_POST[signup][company]}' /><br />"; }
-				if($signup_title)  { $out .=	"		<label for='signup_title'>Title</label><br /><input id='signup_title' name='signup[title]' type='text' value='{$_POST[signup][title]}' /><br />"; }
-				if($signup_address)  { $out .=	"		<label for='signup_address'>Address</label><br /><input id='signup_address' name='signup[address]' type='text' value='{$_POST[signup][address]}' /><br />"; }
-				if($signup_city)  { $out .=	"		<label for='signup_city'>City</label><br /><input id='signup_city' name='signup[city]' type='text' value='{$_POST[signup][city]}' /><br />"; }
-				if($signup_state)  { $out .=	"		<label for='signup_state'>State</label><br /><input id='signup_state' name='signup[state]' type='text' value='{$_POST[signup][state]}' /><br />"; }
-				if($signup_zip)  { $out .=	"		<label for='signup_zip'>Zip</label><br /><input id='signup_zip' name='signup[zip]' type='text' value='{$_POST[signup][zip]}' /><br />"; }
-				if($signup_country)  { $out .=	"		<label for='signup_country'>Country</label><br /><input id='signup_country' name='signup[country]' type='text' value='{$_POST[signup][country]}' /><br />"; }
-				$out .=	"		<label for='signup_email'>Email</label><br /><input id='signup_email' name='signup[email]' type='text' value='{$_POST[signup][email]}' /><br />";
+				if($signup_name)  { $out .=	"		<label for='signup_name{$this->number}'>Name</label><br /><input id='signup_name{$this->number}' name='signup[name]' type='text' value='{$_POST[signup][name]}' /><br />"; }
+				if($signup_phone)  { $out .=	"		<label for='signup_phone{$this->number}'>Phone</label><br /><input id='signup_phone{$this->number}' name='signup[phone]' type='text' value='{$_POST[signup][phone]}' /><br />"; }
+				if($signup_company)  { $out .=	"		<label for='signup_company{$this->number}'>Company</label><br /><input id='signup_company{$this->number}' name='signup[company]' type='text' value='{$_POST[signup][company]}' /><br />"; }
+				if($signup_title)  { $out .=	"		<label for='signup_title{$this->number}'>Title</label><br /><input id='signup_title{$this->number}' name='signup[title]' type='text' value='{$_POST[signup][title]}' /><br />"; }
+				if($signup_address)  { $out .=	"		<label for='signup_address{$this->number}'>Address</label><br /><input id='signup_address{$this->number}' name='signup[address]' type='text' value='{$_POST[signup][address]}' /><br />"; }
+				if($signup_city)  { $out .=	"		<label for='signup_city{$this->number}'>City</label><br /><input id='signup_city{$this->number}' name='signup[city]' type='text' value='{$_POST[signup][city]}' /><br />"; }
+				if($signup_state)  { $out .=	"		<label for='signup_state{$this->number}'>State</label><br /><input id='signup_state{$this->number}' name='signup[state]' type='text' value='{$_POST[signup][state]}' /><br />"; }
+				if($signup_zip)  { $out .=	"		<label for='signup_zip{$this->number}'>Zip</label><br /><input id='signup_zip{$this->number}' name='signup[zip]' type='text' value='{$_POST[signup][zip]}' /><br />"; }
+				if($signup_country)  { $out .=	"		<label for='signup_country{$this->number}'>Country</label><br /><input id='signup_country{$this->number}' name='signup[country]' type='text' value='{$_POST[signup][country]}' /><br />"; }
+				$out .=	"		<label for='signup_email{$this->number}'>Email<span class='required' title='This field is required'>*</span></label><br /><input id='signup_email{$this->number}' name='signup[email]' type='text' value='{$_POST[signup][email]}' /><br />";
 				
 				$out .=	"		<input name='commit' class='button' type='submit' value='$submittext' />";
 				if(!empty($successredirect)) { 
@@ -114,7 +116,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				$out .=	"</div>
 				</form>";
 			}
-			if($madmimi_link) {  // Since 1.1, please help support the plugin author by leaving this code intact :-)
+			if($link && $madmimi_link) {  // Since 1.1, please help support the plugin author by leaving this code intact :-)
 				$out .= '<p class="mad_mimi_link">Emails by <a href="http://bit.ly/mad-mimi" title="Mad Mimi is a simple, intelligent and powerful email marketing utility that anyone can use." >Mad Mimi</a></p>';
 			}
 			$out = apply_filters('mad_mimi_signup_form', $out); // Since 1.1
@@ -133,7 +135,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				}	
 			}
 			if(is_array($lists)) { $lists = @implode(',',$lists); } // @ Since 1.1 to prevent error
-			else { return false; } // Since 1.1
+			else { $lists = ''; } // Since 1.1, updated 1.2 to blank instead of false
 			
 			$out .= $lists.'" type="hidden" />';
 			return $out;
@@ -159,15 +161,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	        	<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?> <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" /></label></p>
 	            <?php echo $error; ?>
 	            
-	            <p><?php $this->madmimi_make_checkbox($instance['hide'], $this->get_field_id('hide'),$this->get_field_name('hide'), 'Do not display widget in sidebar.<br /><small>If you are exclusively using the [madmimi id='.$madmimi_number.'] shortcode, not the sidebar widget. Note: you can use a widget in <em>both</em> sidebar and shortcode at the same time.</small>'); ?></p>
-	             
 	             <?php 
 	             	$listsList = $this->create_user_lists_list($instance, 'list'); 
 	             	if($listsList) { ?>
-	             <div>
-	             	<p><label>Select User Lists for this Form</label></p>
-	             	<?php echo $listsList; ?>
-	             </div>
+			             <fieldset style="border:1px solid #ccc; margin-bottom:1em;">
+			             	<legend style="font-size:1.2em; text-align:center;"><h4>Select User Lists for this Form</h4></legend>
+			             	<p style="padding:.5em 1em 0;">When filling out the form, users will be added to the following lists. If none selected, they will be added to your general Audience list.</p>
+				             <?php echo $listsList; ?>
+			             </fieldset>
 	             <?php } ?>
 	             
 	             <fieldset style="border:1px solid #ccc; margin-bottom:1em;">
@@ -180,6 +181,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 					$this->madmimi_make_textarea($initiated, true, 'You have been added to our list. Thank you for signing up.', $instance['successmessage'], $this->get_field_id('successmessage'),$this->get_field_name('successmessage'), 'Message shown on successful signup (in place of the form). <small>(HTML allowed)</small>'); 
 	            	
 	            	$this->madmimi_make_textfield($initiated, true, 'Submit', $instance['submittext'], $this->get_field_id('submittext'),$this->get_field_name('submittext'), 'Change Submit Button Text'); ?>
+	            	<p><?php $this->madmimi_make_checkbox($instance['hide'], $this->get_field_id('hide'),$this->get_field_name('hide'), 'Do not display widget in sidebar.<br /><small>If you are exclusively using the [madmimi id='.$madmimi_number.'] shortcode, not the sidebar widget. Note: you can use a widget in <em>both</em> sidebar and shortcode at the same time.</small>'); ?></p>
+	            	
 	            	<p><?php $this->madmimi_make_checkbox($instance['madmimi_link'], $this->get_field_id('madmimi_link'),$this->get_field_name('madmimi_link'), 'Display a link to Mad Mimi&nbsp;<img src="'.get_bloginfo('url').'/'.WPINC.'/images/smilies/icon_biggrin.gif" width="15" height="15" alt="Tanks a miwwiuns!" title="Yer relly nice, tanks yu!" /><br /><small>This link takes users to MadMimi.com, letting them know where emails will be coming from. The link also helps support the plugin author when someone clicks it.</small>'); ?></p><?php
 	    }
 	function create_form_fields_list($instance) {
@@ -199,17 +202,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	}
 	function create_user_lists_list($instance, $type = 'checkbox') {
 		#global $instance;
-		$dropdown = $list = false;
+		$dropdown = $list = $xml = false;
 		if($type == 'dropdown') { $dropdown = true; }
 		if($type == 'list') { $list = true; }
 		
 		$response = get_user_lists();
 	
-		$xml = simplexml_load_string($response);
-		
-		if(sizeof($xml->list) > 0) {
+		if(function_exists('simplexml_load_string') && 1 ==2) {
+			$xml = simplexml_load_string($response);
+		} else { // Since 1.2
+			echo madmimi_make_notice_box('<strong>This plugin requires PHP5 for user list management</strong>. Your web host does not support PHP5.<br /><br />Everything else should work in the plugin except for being able to define what lists a user will be added to upon signup.<br /><br /><strong>You may contact your hosting company</strong> and ask if they can upgrade your PHP version to PHP5; generally this is done at no cost.');
+		}
+				
+		if($xml && is_object($xml) && sizeof($xml->list) > 0) { // Updated 1.2
 			if($dropdown) { $out = '<select>'; }
-			if($list)  { $out = '<ul>'; }
+			if($list)  { $out = '<ul style="margin-left:1.5em;">'; }
 			foreach($xml->list as $l) {
 				$a = $l->attributes();
 				
@@ -224,9 +231,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			}
 			if($list)  { $out .= '</ul>'; }
 			if($dropdown) { $out .= '</select>'; }
-			echo $out;
+			return $out;
 		} else {
-			return(false);
+			return false;
 		}
 	}
 	
