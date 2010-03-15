@@ -83,6 +83,9 @@ You can also modify the error message by hooking into `mad_mimi_signup_form_erro
 
 == Changelog ==
 
+= 1.2.1 = 
+* Critical upgrade - fixes widget not displaying in Widgets page
+
 = 1.2 =
 * Added support for PHP4 servers. The plugin won't have the user list management functionality, but everything else should work.
 * Fixed potential error when submitting a form without a selected user list
@@ -100,6 +103,9 @@ You can also modify the error message by hooking into `mad_mimi_signup_form_erro
 * Initial plugin release
 
 == Upgrade Notice ==
+
+= 1.2.1 = 
+* Critical upgrade - fixes widget not displaying in Widgets page.
 
 = 1.2 =
 * Added support for PHP4 servers. The plugin won't have the user list management functionality, but everything else should work.

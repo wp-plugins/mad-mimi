@@ -208,7 +208,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		
 		$response = get_user_lists();
 	
-		if(function_exists('simplexml_load_string') && 1 ==2) {
+		if(function_exists('simplexml_load_string')) {
 			$xml = simplexml_load_string($response);
 		} else { // Since 1.2
 			echo madmimi_make_notice_box('<strong>This plugin requires PHP5 for user list management</strong>. Your web host does not support PHP5.<br /><br />Everything else should work in the plugin except for being able to define what lists a user will be added to upon signup.<br /><br /><strong>You may contact your hosting company</strong> and ask if they can upgrade your PHP version to PHP5; generally this is done at no cost.');
