@@ -4,7 +4,7 @@ Plugin Name: Mad Mimi for WordPress
 Plugin URI: http://www.seodenver.com/mad-mimi/
 Description: Add a Mad Mimi signup form to your WordPress website.
 Author: Katz Web Services, Inc.
-Version: 1.2.1
+Version: 1.2.2
 Author URI: http://katzwebservices.com
 */
 
@@ -25,7 +25,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-@include('madmimi-widget.php');
+@include('madmimi-widget.php'); // Updated 1.2.1
 
 add_action('admin_menu', 'kws_mad_mimi_admin');
 
@@ -48,7 +48,7 @@ function kws_mad_mimi_settings_link( $links, $file ) {
 add_action('plugins_loaded', 'madmimi_register_widgets');
 function madmimi_register_widgets(){
 
-	if (!function_exists('register_sidebar_widget')) {
+	if (!function_exists('register_sidebar_widget') || !function_exists('curl_init')) { // Added 1.2.2
 		return;
 	}
 	register_sidebar_widget( 'Mad Mimi', 'madmimi_display_widget');
@@ -81,6 +81,7 @@ function mad_mimi_page() {
 				<?php 
 					mimi_show_configuration_check(false);
 					
+					if(function_exists('curl_init')) { // Added 1.2.2
 					$rows[] = array(
 							'id' => 'mad_mimi_username',
 							'label' => 'Mad Mimi Username',
@@ -105,6 +106,7 @@ function mad_mimi_page() {
 					<p class="submit">
 					<input type="submit" class="button-primary" name="save" value="<?php _e('Save Changes') ?>" />
 					</p>
+				<?php } ?>
 				</form>
 			</div>
 		</div>
@@ -148,13 +150,18 @@ return $out;
 }
 
 function mimi_show_configuration_check($link = true) {
-	if(madmimi_check_settings()) {
-    	$content = 'Your '; if($link) { $content .= '<a href="' . admin_url( 'options-general.php?page=mad-mimi' ) . '">'; } $content .=  __('Mad Mimi account settings'); if($link) { $content .= '</a>'; } $content .= ' are configured properly. You\'re ready to go.'; if(!$link) { $content .= ' <strong><a href="widgets.php">Configuring your forms</a>.</strong>'; } 
-    	echo madmimi_make_notice_box($content, 'success');
-    } else {
-    	$content = 'Your '; if($link) { $content .= '<a href="' . admin_url( 'options-general.php?page=mad-mimi' ) . '">'; } $content .=  __('Mad Mimi account settings') ; if($link) { $content .= '</a>'; } $content .= '  are <strong>not configured properly</strong>.';
+	if(!function_exists('curl_init')) { // Added 1.2.2
+		$content = 'Your server does not support <code>curl_init</code>. Please call your host and ask them to enable this functionality, which is required for this awesome plugin.';
     	echo madmimi_make_notice_box($content, 'error');
-    };
+	} else {
+		if(madmimi_check_settings()) {
+	    	$content = 'Your '; if($link) { $content .= '<a href="' . admin_url( 'options-general.php?page=mad-mimi' ) . '">'; } $content .=  __('Mad Mimi account settings'); if($link) { $content .= '</a>'; } $content .= ' are configured properly. You\'re ready to go.'; if(!$link) { $content .= ' <strong><a href="widgets.php">Configuring your forms</a>.</strong>'; } 
+	    	echo madmimi_make_notice_box($content, 'success');
+	    } else {
+	    	$content = 'Your '; if($link) { $content .= '<a href="' . admin_url( 'options-general.php?page=mad-mimi' ) . '">'; } $content .=  __('Mad Mimi account settings') ; if($link) { $content .= '</a>'; } $content .= '  are <strong>not configured properly</strong>.';
+	    	echo madmimi_make_notice_box($content, 'error');
+	    };
+    }
 }
 
 function madmimi_make_notice_box($content, $type="error") {
@@ -272,16 +279,22 @@ function process_emails($signup, $list = false) {
 
 function madmimi_check_settings($emails=false, $list=false) {
 	global $api, $user, $ty;
-	
+
+	$reponse = '';
 	$url = 'http://madmimi.com/audience_lists/lists.xml?username='.$user.'&api_key='.$api;
-	#CURLOPT_URL
-	$ch = curl_init($url);
-	curl_setopt($ch, CURLOPT_URL, $url);
-	curl_setopt($ch, CURLOPT_HTTPGET, TRUE);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-	$response = curl_exec($ch);
-	curl_close($ch);
 	
+	if(function_exists('curl_init')) { // Added 1.2.2
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_HTTPGET, TRUE);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		$response = curl_exec($ch);
+		curl_close($ch);
+	} 
+	if(!$response || !function_exists('curl_init')) {  // Added 1.2.2
+		echo madmimi_make_notice_box('Your web host does not support <code>curl</code>, which this plugin requires for <strong>list management functionality</strong>. Please contact your host and see if they can activate <code>curl</code>; generally this is possible and done at no cost.');
+		return false;
+	}
 	if(!function_exists('simplexml_load_string')) { // Added 1.2
 		echo madmimi_make_notice_box('Your web host does not support PHP5, which this plugin requires for <strong>list management functionality</strong>. Please contact your host and see if they can upgrade your PHP version; generally this is done at no cost.');
 		if($response) {
@@ -289,7 +302,7 @@ function madmimi_check_settings($emails=false, $list=false) {
 		} 
 		return false;
 	} else {
-		$response = simplexml_load_string($response);
+		$response = @simplexml_load_string($response);  // Added @ 1.2.2
 		if(is_object($response)) {
 			return true;
 		} else {
@@ -303,13 +316,14 @@ function madmimi_check_settings($emails=false, $list=false) {
 function add_users_to_list($signup=false, $list=false) {
 	global $api, $user, $ty;
 	
-	$csv_data = process_emails($signup,$list); 
-	
-	$ch = curl_init('http://madmimi.com/audience_members');
-	curl_setopt($ch, CURLOPT_POST, TRUE);
-	curl_setopt($ch, CURLOPT_POSTFIELDS,
-	'username='.$user.'&api_key='.$api.'&csv_file='.$csv_data);
-	$response = curl_exec($ch);
+	if(function_exists('curl_init')) { // Added 1.2.2	
+		$csv_data = process_emails($signup,$list); 
+		$ch = curl_init('http://madmimi.com/audience_members');
+		curl_setopt($ch, CURLOPT_POST, TRUE);
+		curl_setopt($ch, CURLOPT_POSTFIELDS,
+		'username='.$user.'&api_key='.$api.'&csv_file='.$csv_data);
+		$response = curl_exec($ch);
+	}
 }
 
 // THANKS JOOST!

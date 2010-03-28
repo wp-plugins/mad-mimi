@@ -10,6 +10,8 @@ Add a Mad Mimi signup form to your WordPress website in the content or the sideb
 
 == Description ==
 
+<strong>>This plugin requires a Mad Mimi account. <a href="http://bit.ly/mad-mimi" rel="nofollow">Sign up for a free account here</a>.</strong>
+
 <h3>Add Mad Mimi signup form to your WordPress website.</h3>
 
 This plugin adds a newsletter signup form to your website in the content and the sidebar of your site.
@@ -28,8 +30,6 @@ This plugin adds a newsletter signup form to your website in the content and the
 	* State
 	* ZIP
 	* Country
-
-<em>Note: this plugin requires a Mad Mimi account. <a href="bit.ly/mad-mimi" rel="nofollow">Sign up for a free account here</a>.</em>
 
 == Installation ==
 
@@ -50,18 +50,21 @@ This plugin adds a newsletter signup form to your website in the content and the
 
 == Frequently Asked Questions == 
 
-= Requires PHP5 for All Features = 
-The plugin requires PHP5 for list management functionality. If your web host does not support PHP5, please contact your host and see if they can upgrade your PHP version; generally this is done at no cost.
+= Requirements = 
+* __Requires PHP5__ for list management functionality. 
+* __Requires `curl`__ to be enabled on the server.
+
+If your web host does not support PHP5 and/or `curl`, please contact your host and see if they can upgrade your PHP version and activate `curl`; generally this can be done, and at no cost.
 
 = What is the plugin license? =
 
 * This plugin is released under a GPL license.
 
 = What is Mad Mimi? =
-Mad Mimi is the easiest email marketing tool out there. It's built from the ground up to be simple and usable. <a href="bit.ly/mad-mimi" rel="nofollow">Learn more about Mad Mimi</a>.
+Mad Mimi is the easiest email marketing tool out there. It's built from the ground up to be simple and usable. <a href="http://bit.ly/mad-mimi" rel="nofollow">Learn more about Mad Mimi</a>.
 
 = Do I need a Mad Mimi account to use this plugin? =
-Yes, this plugin requires a Mad Mimi account. <a href="bit.ly/mad-mimi" rel="nofollow">Sign up for a free account here</a>.
+Yes, this plugin requires a Mad Mimi account. <a href="http://bit.ly/mad-mimi" rel="nofollow">Sign up for a free account here</a>.
 
 
 = How do I use the new `apply_filters()` functionality? (Added 1.1) =
@@ -83,6 +86,10 @@ You can also modify the error message by hooking into `mad_mimi_signup_form_erro
 
 == Changelog ==
 
+= 1.2.2 =
+* Runs a check to see if `curl_init` is supported by the web host; it's required for this plugin
+* Fixed readme.txt links to MadMimi
+
 = 1.2.1 = 
 * Critical upgrade - fixes widget not displaying in Widgets page
 
@@ -103,6 +110,9 @@ You can also modify the error message by hooking into `mad_mimi_signup_form_erro
 * Initial plugin release
 
 == Upgrade Notice ==
+
+= 1.2.2 = 
+* If you have experienced `Call to undefined function curl_init()` or `simplexml_load_string() Entity: line 1: parser error : Start tag expected` errors, this update should provide further information and better handle the errors
 
 = 1.2.1 = 
 * Critical upgrade - fixes widget not displaying in Widgets page.
