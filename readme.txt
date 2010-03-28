@@ -10,7 +10,7 @@ Add a Mad Mimi signup form to your WordPress website in the content or the sideb
 
 == Description ==
 
-<strong>>This plugin requires a Mad Mimi account. <a href="http://bit.ly/mad-mimi" rel="nofollow">Sign up for a free account here</a>.</strong>
+<strong>This plugin requires a Mad Mimi account. <a href="http://bit.ly/mad-mimi" rel="nofollow">Sign up for a free account here</a>.</strong>
 
 <h3>Add Mad Mimi signup form to your WordPress website.</h3>
 
