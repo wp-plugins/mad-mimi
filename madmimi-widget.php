@@ -37,7 +37,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 
 	 
 	    function widget($args, $instance) {      
-	    	
+	    	global $madmimi_settings_checked;
+            if (!$madmimi_settings_checked)
+                return;
+            
 	    	$args = wp_parse_args( $args, $instance );
 	    	$output = '';
 	        extract( $args );
@@ -55,13 +58,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		         echo $output;
 			} // end if hide
 	    }
+	 	
 	 	private function r($content, $echo=true) {
 	 			$output = '<pre>';
-	 			$output .= print_r($content, true); //print_r(mixed expression [, bool return])
+	 			$output .= print_r($content, true);
 	 			$output .= '</pre>';
 	 		if($echo) {	echo $output; }
 	 		else { return $output; }
 	 	}
+	 	
 	 	function mimi_signup_form($args, $shortcode_id = false, $show_title = false) {
 			if($shortcode_id) { $this->number = (int)$shortcode_id;}
 			$error = $out = '';
@@ -74,17 +79,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			
 			if(isset($_POST['success']) && isset($_POST['mimi_form_id']) && $_POST['mimi_form_id'] == $this->number) { // The form has been submitted
 				if($_POST['success'] == 1) { // It worked
-					$out .= wpautop($successmessage); // Added wpautop() 1.2
-					$link = false; // Added 1.2
+					$success .= '<div class="mad_mimi_success">'.wpautop($successmessage).'</div>'; // Added wpautop() 1.2, wrapped in div 1.3
+					$success = apply_filters('mad_mimi_signup_form_success', $success); // Since 1.3
+					$out .= $success;
+					$link = false; // Since 1.2
 				} else { // Didn't work
 					## Need error message
-					$out .= '<p class="madmimi_error">There was an error with the signup process.</p>';
+					$out .= '<p class="madmimi_error mad_mimi_error">There was an error with the signup process.</p>'; // Added mad_mimi_error for naming consistency
 				}
 			} else { // Not been submitted
 				if(
 					isset($_POST['signuperror']) 
 					&& $_POST['mimi_form_id'] == $this->number // Make sure it's this form, not another Mad Mimi form.
-				) { $error = '<p class="madmimi_error">'.$_POST['signuperror'].'</p>';}
+				) { $error = '<p class="madmimi_error mad_mimi_error">'.$_POST['signuperror'].'</p>';} // Added mad_mimi_error for naming consistency
 						
 				$out .= "<form method='post' id='mad_mimi_form{$this->number}'>
 					<div>";
@@ -117,7 +124,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				</form>";
 			}
 			if($link && $madmimi_link) {  // Since 1.1, please help support the plugin author by leaving this code intact :-)
-				$out .= '<p class="mad_mimi_link">Emails by <a href="http://bit.ly/mad-mimi" title="Mad Mimi is a simple, intelligent and powerful email marketing utility that anyone can use." >Mad Mimi</a></p>';
+				$out .= '<p class="mad_mimi_link">Emails by <a href="http://bit.ly/mad-mimi" title="Mad Mimi is a simple, intelligent and powerful email marketing utility that anyone can use." rel="nofollow">Mad Mimi</a></p>'; // Added nofollow 1.3
 			}
 			$out = apply_filters('mad_mimi_signup_form', $out); // Since 1.1
 	 		return $out;
@@ -154,7 +161,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	        if(is_int($this->number) || !$this->number) { $madmimi_number = $this->number; echo '<p><strong>Mad Mimi Widget ID='.$madmimi_number.'</strong></p>'; } else { $madmimi_number = '#';}
 	        if(isset($instance['initiated'])) { $initiated = true; } else { $initiated=false;}
 
-	        mimi_show_configuration_check();
+	        #mimi_show_configuration_check();
 	        
 	        ?>
 	        	<p>You can embed the form in post or page content by using the following code: <code>[madmimi id=<?php echo $madmimi_number; ?>]</code>. <?php if($madmimi_number == '#') { ?><small>(The ID will show once the widget is saved for the first time.)</small><?php } ?></p>
@@ -206,7 +213,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		if($type == 'dropdown') { $dropdown = true; }
 		if($type == 'list') { $list = true; }
 		
-		$response = get_user_lists();
+		$response = madmimi_get_user_lists();
 	
 		if(function_exists('simplexml_load_string')) {
 			$xml = simplexml_load_string($response);

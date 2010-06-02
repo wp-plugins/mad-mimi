@@ -12,11 +12,13 @@ Add a Mad Mimi signup form to your WordPress website in the content or the sideb
 
 <strong>This plugin requires a Mad Mimi account. <a href="http://bit.ly/mad-mimi" rel="nofollow">Sign up for a free account here</a>.</strong>
 
+> Mad Mimi is a lovely, simple email service that lets you create, send and track emails. Over 32,000 businesses use <a href="http://bit.ly/mad-mimi" rel="nofollow">Mad Mimi</a> to handle email the simple way.
+
 <h3>Add Mad Mimi signup form to your WordPress website.</h3>
 
 This plugin adds a newsletter signup form to your website in the content and the sidebar of your site.
 
-<h4>Plugin Features:</h4>
+<h4>MadMimi Plugin Features:</h4>
 * Select which forms users subscribe to
 * Unlimited signup forms for any number of email lists
 * Choose to include a number of fields in the form, including:
@@ -66,8 +68,7 @@ Mad Mimi is the easiest email marketing tool out there. It's built from the grou
 = Do I need a Mad Mimi account to use this plugin? =
 Yes, this plugin requires a Mad Mimi account. <a href="http://bit.ly/mad-mimi" rel="nofollow">Sign up for a free account here</a>.
 
-
-= How do I use the new `apply_filters()` functionality? (Added 1.1) =
+= How do I use the `apply_filters()` functionality? (Added 1.1) =
 If you want to change some code in the widget, you can use the WordPress `add_filter()` function to achieve this.
 
 You can add code to your theme's `functions.php` file that will modify the widget output. Here's an example:
@@ -85,6 +86,19 @@ add_filter('mad_mimi_signup_form', 'my_example_function');
 You can also modify the error message by hooking into `mad_mimi_signup_form_error` in a similar manner.
 
 == Changelog ==
+
+= 1.3 =
+Structural improvements in Version 1.3 are thanks to <a href="http://wordpress.org/extend/plugins/profile/leogermani">Leo Germani</a>.
+
+* Created a class, so (almost) everything is inside it. No more globals named $user or $api.
+* Changed the way settings are saved based on the best practices:
+	- Use of register_setting() and settings_field() (which takes care of the nonce and everything)
+	- All options in a single database entry
+* When displaying a widget, the plugin now checks if the settings are configured properly, otherwise it won't show the widget.
+* Added code structure for internationalization of plugin. Details to come.
+* Wrapped "thank-you" signup message in `<div class="mad_mimi_success">` for better formatting control.
+* Added `mad_mimi_signup_form_success` filter for modifying the form submission message.
+* Added `rel=nofollow` to the optional link to Mad Mimi.
 
 = 1.2.2 =
 * Runs a check to see if `curl_init` is supported by the web host; it's required for this plugin
@@ -111,6 +125,8 @@ You can also modify the error message by hooking into `mad_mimi_signup_form_erro
 
 == Upgrade Notice ==
 
+= 1.3 = 
+* Structural improvements, thanks to <a href="http://wordpress.org/extend/plugins/profile/leogermani" rel="nofollow">Leo Germani</a>
 = 1.2.2 = 
 * If you have experienced `Call to undefined function curl_init()` or `simplexml_load_string() Entity: line 1: parser error : Start tag expected` errors, this update should provide further information and better handle the errors
 
