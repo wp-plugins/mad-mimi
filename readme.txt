@@ -88,7 +88,7 @@ You can also modify the error message by hooking into `mad_mimi_signup_form_erro
 == Changelog ==
 
 = 1.3 =
-Structural improvements in Version 1.3 are thanks to <a href="http://wordpress.org/extend/plugins/profile/leogermani">Leo Germani</a>.
+Structural improvements in Version 1.3 are thanks to <a href="http://hacklab.com.br">Leo Germani</a>.
 
 * Created a class, so (almost) everything is inside it. No more globals named $user or $api.
 * Changed the way settings are saved based on the best practices:
@@ -126,7 +126,8 @@ Structural improvements in Version 1.3 are thanks to <a href="http://wordpress.o
 == Upgrade Notice ==
 
 = 1.3 = 
-* Structural improvements, thanks to <a href="http://wordpress.org/extend/plugins/profile/leogermani" rel="nofollow">Leo Germani</a>
+* Structural improvements, thanks to <a href="http://hacklab.com.br" rel="nofollow">Leo Germani</a>
+
 = 1.2.2 = 
 * If you have experienced `Call to undefined function curl_init()` or `simplexml_load_string() Entity: line 1: parser error : Start tag expected` errors, this update should provide further information and better handle the errors
 
