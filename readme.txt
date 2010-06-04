@@ -10,17 +10,19 @@ Add a Mad Mimi signup form to your WordPress website in the content or the sideb
 
 == Description ==
 
-<strong>This plugin requires a Mad Mimi account. <a href="http://bit.ly/mad-mimi" rel="nofollow">Sign up for a free account here</a>.</strong>
-
-> Mad Mimi is a lovely, simple email service that lets you create, send and track emails. Over 32,000 businesses use <a href="http://bit.ly/mad-mimi" rel="nofollow">Mad Mimi</a> to handle email the simple way.
+> <strong>This plugin requires a Mad Mimi account.</strong><br /><a href="http://bit.ly/mad-mimi" rel="nofollow">Sign up for a free account here</a>.
 
 <h3>Add Mad Mimi signup form to your WordPress website.</h3>
 
-This plugin adds a newsletter signup form to your website in the content and the sidebar of your site.
+<strong>What is Mad Mimi?</strong><br />
+Mad Mimi is a lovely, simple email service that lets you create, send and track emails. Over 32,000 businesses use <a href="http://bit.ly/mad-mimi" rel="nofollow">Mad Mimi</a> to handle email the simple way.
+
+This plugin adds a Mad Mimi signup form to your website in the content and the sidebar of your site.
 
 <h4>MadMimi Plugin Features:</h4>
 * Select which forms users subscribe to
 * Unlimited signup forms for any number of email lists
+* Automatically add registered users to a mailing list of your choice
 * Choose to include a number of fields in the form, including:
 	* Email
 	* Name
