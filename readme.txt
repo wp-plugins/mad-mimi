@@ -1,7 +1,7 @@
 === Mad Mimi for WordPress ===
 Tags: madmimi, mad mimi, widget, newsletter, form, signup, newsletter widget, newsletter plugin, newsletters, emails, email, email newsletter form, newsletter form, newsletter signup, email widget, email marketing, newsletter, form, signup
 Requires at least: 2.8
-Tested up to: 2.9.2
+Tested up to: 3.0
 Stable tag: trunk
 Contributors: katzwebdesign
 Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=zackkatz%40gmail%2ecom&item_name=Mad%20Mimi%20for%20WordPress&no_shipping=0&no_note=1&tax=0&currency_code=USD&lc=US&bn=PP%2dDonationsBF&charset=UTF%2d8
@@ -11,6 +11,7 @@ Integrate Mad Mimi with your WordPress website: includes signup form widgets and
 == Description ==
 
 > <strong>This plugin requires a Mad Mimi account.</strong><br /><a href="http://bit.ly/mad-mimi" rel="nofollow">Sign up for a free account here</a>.
+> [youtube http://www.youtube.com/watch?v=dAc--dd_dFo]
 
 <h3>Add Mad Mimi signup form to your WordPress website.</h3>
 
