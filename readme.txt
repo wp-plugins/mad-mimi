@@ -1,7 +1,7 @@
 === Mad Mimi for WordPress ===
 Tags: madmimi, mad mimi, widget, newsletter, form, signup, newsletter widget, newsletter plugin, newsletters, emails, email, email newsletter form, newsletter form, newsletter signup, email widget, email marketing, newsletter, form, signup
 Requires at least: 2.8
-Tested up to: 3.0
+Tested up to: 3.0.1
 Stable tag: trunk
 Contributors: katzwebdesign
 Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=zackkatz%40gmail%2ecom&item_name=Mad%20Mimi%20for%20WordPress&no_shipping=0&no_note=1&tax=0&currency_code=USD&lc=US&bn=PP%2dDonationsBF&charset=UTF%2d8
@@ -10,7 +10,7 @@ Integrate Mad Mimi with your WordPress website: includes signup form widgets and
 
 == Description ==
 
-> <strong>This plugin requires a Mad Mimi account.</strong><br /><a href="http://bit.ly/mad-mimi" rel="nofollow">Sign up for a free account here</a>.
+> <strong>This plugin requires a Mad Mimi account.</strong><br /><a href="http://bit.ly/mad-mimi" rel="nofollow">Sign up for a free account here</a>. Trust me, you'll like it.
 
 <h3>Add Mad Mimi signup form to your WordPress website.</h3>
 
@@ -34,6 +34,10 @@ This plugin adds a Mad Mimi signup form to your website in the content and the s
 	* State
 	* ZIP
 	* Country
+
+### Issues, Feature Requests, and Other Feedback
+<strong>For support on this plugin</strong>, please <a href="http://www.seodenver.com/mad-mimi/">go to the Mad Mimi plugin page</a> and leave a comment.
+
 ### Introduction to using Mad Mimi
 [youtube http://www.youtube.com/watch?v=dAc--dd_dFo]
 
@@ -91,6 +95,10 @@ You can also modify the error message by hooking into `mad_mimi_signup_form_erro
 
 == Changelog ==
 
+= 1.3.1 = 
+* Speed improvements - <strong>important update!</strong> Thanks to <a href="http://www.Xclusivetan.com" rel="nofollow">Troy Leece</a> and <a href="http://www.kevincarrelfooter.com" rel="nofollow">Kevin</a> for pointing the speed issue out.
+* Added a `mad_mimi_thank_you_link` filter to change the optional link text to whatever you want. Refer to the FAQ for more information on how to do that.
+
 = 1.3 =
 Structural improvements in Version 1.3 are thanks to <a href="http://hacklab.com.br">Leo Germani</a>.
 
@@ -128,6 +136,9 @@ Structural improvements in Version 1.3 are thanks to <a href="http://hacklab.com
 * Initial plugin release
 
 == Upgrade Notice ==
+
+= 1.3.1 = 
+* Speed improvements - important update! Fixes slow load time issue.
 
 = 1.3 = 
 * Structural improvements, thanks to <a href="http://hacklab.com.br" rel="nofollow">Leo Germani</a>

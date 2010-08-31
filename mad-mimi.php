@@ -4,7 +4,7 @@ Plugin Name: Mad Mimi for WordPress
 Plugin URI: http://www.seodenver.com/mad-mimi/
 Description: Add a Mad Mimi signup form to your WordPress website.
 Author: Katz Web Services, Inc.
-Version: 1.3
+Version: 1.3.1
 Author URI: http://www.katzwebservices.com
 */
 
@@ -31,16 +31,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class KWSMadMimi {
 
     function KWSMadMimi() {
-    
-        add_action('admin_menu', array(&$this, 'admin'));
-        add_filter( 'plugin_action_links', array(&$this, 'settings_link'), 10, 2 );
-        add_action('plugins_loaded', array(&$this, 'register_widgets'));
-        add_action('init', array(&$this, 'process_submissions'),1);
-        add_action('plugins_loaded', array(&$this, 'redirect'));
-        add_action('admin_init', array(&$this, 'settings_init') );
+    	
+    	if(is_admin()) {
+    		add_action('admin_menu', array(&$this, 'admin'));
+    		add_filter( 'plugin_action_links', array(&$this, 'settings_link'), 10, 2 );
+    		add_action('admin_init', array(&$this, 'settings_init') );
+        } else {
+			add_action('plugins_loaded', array(&$this, 'register_widgets'));
+			add_action('init', array(&$this, 'process_submissions'),1);
+			add_action('plugins_loaded', array(&$this, 'redirect'));
+		}
+		
+        $options = get_option('madmimi');
         
-        $options = get_option('madmimi', array());
-        
+        $this->api = $options['api'];
+        $this->username = $options['username'];
+        $this->new_users_list = isset($options['new_users_list']) ? $options['new_users_list'] : 0;
+		$this->settings_checked = $options['settings_checked'];
+		
+		// If the settings have been updated in the admin
+		// or in the admin, on the mad mimi settings page, the settings still aren't right
+        if(is_admin() && 
+        	($_REQUEST['page'] == 'mad-mimi' && (empty($this->settings_checked) || empty($options['settings_checked'])) || 
+        	(isset($_POST['page_options']) && strpos($_POST['page_options'], 'mad_mimi_api')))) 
+        {
+			$this->settings_checked = $options['settings_checked'] = $this->check_settings();
+	       	update_option('madmimi', $options);
+		}
+		
         // Upgrade options from previous versions of this plugin:
         if ( (!isset($options['version']) || $options['version'] < 1) ) {
             $options['version'] = 1;
@@ -56,17 +74,11 @@ class KWSMadMimi {
             delete_option('mad_mimi_ty_page');
             update_option('madmimi', $options);
         }
-        $this->api = $options['api'];
-        $this->username = $options['username'];
-        $this->new_users_list = isset($options['new_users_list']) ? $options['new_users_list'] : 0;
-
-        // Lets do this check only once
-        $this->settings_checked = $this->check_settings();
         
-        // and put this in a global too, so widgets can check it
+      	// and put this in a global too, so widgets can check it
         global $madmimi_settings_checked;
-        $madmimi_settings_checked = $this->settings_checked;
-        
+        $madmimi_settings_checked = $options['settings_checked'];
+		        
         if ((int) $this->new_users_list > 0) {
             add_action('user_register', array(&$this, 'user_register') );
         }
@@ -325,7 +337,6 @@ class KWSMadMimi {
     function check_settings() {
         $reponse = '';
         $url = 'http://madmimi.com/audience_lists/lists.xml?username='.$this->username.'&api_key='.$this->api;
-        
         if(function_exists('curl_init')) { // Added 1.2.2
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_URL, $url);
@@ -334,6 +345,7 @@ class KWSMadMimi {
             $response = curl_exec($ch);
             curl_close($ch);
         } 
+
         if(!$response || !function_exists('curl_init')) {  // Added 1.2.2
             echo $this->make_notice_box(__('Your web host does not support <code>curl</code>, which this plugin requires for <strong>list management functionality</strong>. Please contact your host and see if they can activate <code>curl</code>; generally this is possible and done at no cost.', 'mad-mimi'));
             return false;
@@ -345,7 +357,7 @@ class KWSMadMimi {
             } 
             return false;
         } else {
-            $response = @simplexml_load_string($response);  // Added @ 1.2.2
+            $response = @simplexml_load_string($response);  // Added @ 1.2.2         
             if(is_object($response)) {
                 return true;
             } else {

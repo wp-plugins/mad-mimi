@@ -32,7 +32,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 
 	    function MadMimiWidget() {
 	    	$widget_options = array('description'=>'Add a Mad Mimi form to your and start adding to your lists!', 'classname' => 'madmimi');
-	        parent::WP_Widget(false, $name = 'Mad Mimi Signup Form', $widget_options);
+	    	$control_options = array('width'=>600); // 600 px wide please
+	        parent::WP_Widget(false, $name = 'Mad Mimi Signup Form', $widget_options, $control_options);
 	    }
 	 
 	 
@@ -83,8 +84,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 					$success = apply_filters('mad_mimi_signup_form_success', $success); // Since 1.3
 					$out .= $success;
 					$link = false; // Since 1.2
-				} else { // Didn't work
-					## Need error message
+				} else { // Didn't work,  need error message
 					$out .= '<p class="madmimi_error mad_mimi_error">There was an error with the signup process.</p>'; // Added mad_mimi_error for naming consistency
 				}
 			} else { // Not been submitted
@@ -124,10 +124,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				</form>";
 			}
 			if($link && $madmimi_link) {  // Since 1.1, please help support the plugin author by leaving this code intact :-)
-				$out .= '<p class="mad_mimi_link">Emails by <a href="http://bit.ly/mad-mimi" title="Mad Mimi is a simple, intelligent and powerful email marketing utility that anyone can use." rel="nofollow">Mad Mimi</a></p>'; // Added nofollow 1.3
+				$out .= $this->mimi_thank_you_link();
 			}
 			$out = apply_filters('mad_mimi_signup_form', $out); // Since 1.1
 	 		return $out;
+	 	}
+	 	
+	 	function mimi_thank_you_link() {
+	 		mt_srand(crc32($_SERVER['REQUEST_URI'])); // Keep links the same on the same page
+	 		$urls = array(array('url'=>'http://bit.ly/mad-mimi','nofollow'=>true), array('url' => 'http://wordpress.org/extend/plugins/mad-mimi/', 'nofollow' => false), array('url' => 'http://www.seodenver.com/mad-mimi/', 'nofollow'=>false));
+			$url = $urls[mt_rand(0, count($urls)-1)];
+			$url = $url['url'];
+			$nofollow = $url['nofollow'] ? ' rel="nofollow"' : '';
+	 		
+	 		$links = array(
+				'Emails by <a href="'.$url.'" title="Mad Mimi is a simple, intelligent and powerful email marketing utility that anyone can use."'.$nofollow.'>Mad Mimi</a>'
+			);
+			
+	 		$link = '<p class="mad_mimi_link">'.trim($links[mt_rand(0, count($links)-1)]).'</p>';
+	 		
+	 		mt_srand(); // Make it random again.
+
+	 		return apply_filters('mad_mimi_thank_you_link', $link);
 	 	}
 	 	
 	 	function mimi_signup_lists($args) {
@@ -161,7 +179,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	        if(is_int($this->number) || !$this->number) { $madmimi_number = $this->number; echo '<p><strong>Mad Mimi Widget ID='.$madmimi_number.'</strong></p>'; } else { $madmimi_number = '#';}
 	        if(isset($instance['initiated'])) { $initiated = true; } else { $initiated=false;}
 
-	        #mimi_show_configuration_check();
+			$KWSMadMimi = new KWSMadMimi(); 
+			$KWSMadMimi->show_configuration_check();
+			if(empty($KWSMadMimi->settings_checked)) { return; }
 	        
 	        ?>
 	        	<p>You can embed the form in post or page content by using the following code: <code>[madmimi id=<?php echo $madmimi_number; ?>]</code>. <?php if($madmimi_number == '#') { ?><small>(The ID will show once the widget is saved for the first time.)</small><?php } ?></p>
