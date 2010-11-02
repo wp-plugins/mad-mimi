@@ -10,7 +10,7 @@ Integrate Mad Mimi with your WordPress website: includes signup form widgets and
 
 == Description ==
 
-> <strong>This plugin requires a Mad Mimi account.</strong><br /><a href="http://bit.ly/mad-mimi" rel="nofollow">Sign up for a free account here</a>.
+> <strong>This plugin requires a Mad Mimi account.</strong><br /><a href="http://bit.ly/mad-mimi" rel="nofollow">Sign up for a free account here</a>. Trust me, you'll like it.
 
 <h3>Add Mad Mimi signup form to your WordPress website.</h3>
 
