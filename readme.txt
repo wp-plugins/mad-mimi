@@ -10,7 +10,7 @@ Integrate Mad Mimi with your WordPress website: includes signup form widgets and
 
 == Description ==
 
-> <strong>This plugin requires a Mad Mimi account.</strong><br /><a href="http://bit.ly/mad-mimi" rel="nofollow">Sign up for a free account here</a>. Trust me, you'll like it.
+> <strong>This plugin requires a Mad Mimi account.</strong><br /><a href="http://bit.ly/mad-mimi" rel="nofollow">Sign up for a free account here</a>.
 
 <h3>Add Mad Mimi signup form to your WordPress website.</h3>
 
@@ -34,10 +34,6 @@ This plugin adds a Mad Mimi signup form to your website in the content and the s
 	* State
 	* ZIP
 	* Country
-
-### Issues, Feature Requests, and Other Feedback
-<strong>For support on this plugin</strong>, please <a href="http://www.seodenver.com/mad-mimi/">go to the Mad Mimi plugin page</a> and leave a comment.
-
 ### Introduction to using Mad Mimi
 [youtube http://www.youtube.com/watch?v=dAc--dd_dFo]
 
@@ -55,14 +51,13 @@ This plugin adds a Mad Mimi signup form to your website in the content and the s
 == Screenshots ==
 
 1. How the widget appears in the Widgets panel 
-2. How the signup form appears in the default WP sidebar.
+2. How the signup form appears in the sidebar of a site using the twentyten theme
 3. How submissions appear on the Mad Mimi Audience page
 
 == Frequently Asked Questions == 
 
 = Requirements = 
 * __Requires PHP5__ for list management functionality. 
-* __Requires `curl`__ to be enabled on the server.
 
 If your web host does not support PHP5 and/or `curl`, please contact your host and see if they can upgrade your PHP version and activate `curl`; generally this can be done, and at no cost.
 
@@ -95,9 +90,21 @@ You can also modify the error message by hooking into `mad_mimi_signup_form_erro
 
 == Changelog ==
 
-= 1.3.1 = 
-* Speed improvements - <strong>important update!</strong> Thanks to <a href="http://www.Xclusivetan.com" rel="nofollow">Troy Leece</a> and <a href="http://www.kevincarrelfooter.com" rel="nofollow">Kevin</a> for pointing the speed issue out.
-* Added a `mad_mimi_thank_you_link` filter to change the optional link text to whatever you want. Refer to the FAQ for more information on how to do that.
+= 1.4 = 
+Lots of improvements in this update.
+
+* Added option for adding text before form
+* Changed method of accessing data from `curl()` to WordPress functions `wp_remote_get()` and wp_remote_post()` - now if users don't have `curl()` on their servers, they still may be able to use the plugin.
+* Added filters for text before form (`madmimi_form_description` and `madmimi_form_description_[form ID]`
+* Added URL validation and sanitation to success page redirection
+* Added basic phone validation to form submissions. Not strict, so works for international & US/Canadian numbers
+* Added `label` to error messages; clicking on the messages will focus users on the field throwing the error.
+* Improved error generation
+* Improved speed of plugin by caching email lists using `set_transient()`
+* Fixed success page redirection
+* Fixed `Undefined offset` PHP notices
+* Fixed display of HTML code in success message
+
 
 = 1.3 =
 Structural improvements in Version 1.3 are thanks to <a href="http://hacklab.com.br">Leo Germani</a>.
@@ -137,8 +144,12 @@ Structural improvements in Version 1.3 are thanks to <a href="http://hacklab.com
 
 == Upgrade Notice ==
 
-= 1.3.1 = 
-* Speed improvements - important update! Fixes slow load time issue.
+= 1.4 =
+* Changed method of accessing data from `curl()` to WordPress functions `wp_remote_get()` and wp_remote_post()` - now if users don't have `curl()` on their servers, they still may be able to use the plugin.
+* Fixed success page redirection
+* Improved speed of plugin by caching email lists using `set_transient()`
+* Fixed `Undefined offset` PHP notices
+* Fixed display of HTML code in success message
 
 = 1.3 = 
 * Structural improvements, thanks to <a href="http://hacklab.com.br" rel="nofollow">Leo Germani</a>
