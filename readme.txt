@@ -90,6 +90,10 @@ You can also modify the error message by hooking into `mad_mimi_signup_form_erro
 
 == Changelog ==
 
+= 1.4.1 =
+
+* Added check for `is_wp_error` to prevent errors from throwing their own error as reported: http://wordpress.org/support/topic/plugin-mad-mimi-for-wordpress-mad-mimi-14-plugin-breaks-plugin-page-with-fatal-php-error
+
 = 1.4 = 
 Lots of improvements in this update.
 
@@ -143,6 +147,9 @@ Structural improvements in Version 1.3 are thanks to <a href="http://hacklab.com
 * Initial plugin release
 
 == Upgrade Notice ==
+
+= 1.4.1 =
+* Fixed `Cannot use object of type WP_Error as array` error as reported: http://wordpress.org/support/topic/plugin-mad-mimi-for-wordpress-mad-mimi-14-plugin-breaks-plugin-page-with-fatal-php-error
 
 = 1.4 =
 * Changed method of accessing data from `curl()` to WordPress functions `wp_remote_get()` and wp_remote_post()` - now if users don't have `curl()` on their servers, they still may be able to use the plugin.
