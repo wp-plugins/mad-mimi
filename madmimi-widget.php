@@ -364,7 +364,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				if($checked || !empty($setting)) { $checkbox .= ' checked="checked"'; }
 				if($disabled)  { $checkbox .= ' disabled="disabled"';}
 				$checkbox .= ' class="checkbox" />
-			<label for="'.$fieldid.'">'.__($title).'</label>';
+			<label for="'.$fieldid.'">'.__((string) $title).'</label>';
 	    return $checkbox;
 	}	
 	

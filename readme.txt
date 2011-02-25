@@ -92,6 +92,9 @@ You can also modify the error message by hooking into `mad_mimi_signup_form_erro
 
 == Changelog ==
 
+= 1.4.2 =
+* Fixed potential bug on line 368 of `madmimi-widget.php`, as reported by <a href="http://hacklab.com.br">Leo Germani</a>. Thanks again, Leo!
+
 = 1.4.1 =
 
 * Added check for `is_wp_error` to prevent errors from throwing their own error as reported: http://wordpress.org/support/topic/plugin-mad-mimi-for-wordpress-mad-mimi-14-plugin-breaks-plugin-page-with-fatal-php-error
@@ -149,6 +152,9 @@ Structural improvements in Version 1.3 are thanks to <a href="http://hacklab.com
 * Initial plugin release
 
 == Upgrade Notice ==
+
+= 1.4.2 =
+* Fixed potential bug on line 368 of `madmimi-widget.php`, as reported by <a href="http://hacklab.com.br">Leo Germani</a>. Thanks again, Leo!
 
 = 1.4.1 =
 * Fixed `Cannot use object of type WP_Error as array` error as reported: http://wordpress.org/support/topic/plugin-mad-mimi-for-wordpress-mad-mimi-14-plugin-breaks-plugin-page-with-fatal-php-error
