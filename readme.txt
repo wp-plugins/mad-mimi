@@ -1,12 +1,12 @@
 === Mad Mimi for WordPress ===
 Tags: madmimi, mad mimi, widget, newsletter, form, signup, newsletter widget, newsletter plugin, newsletters, emails, email, email newsletter form, newsletter form, newsletter signup, email widget, email marketing, newsletter, form, signup
 Requires at least: 2.8
-Tested up to: 3.0.1
+Tested up to: 3.1
 Stable tag: trunk
 Contributors: katzwebdesign
 Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=zackkatz%40gmail%2ecom&item_name=Mad%20Mimi%20for%20WordPress&no_shipping=0&no_note=1&tax=0&currency_code=USD&lc=US&bn=PP%2dDonationsBF&charset=UTF%2d8
 
-Integrate Mad Mimi with your WordPress website: includes signup form widgets and automatically adding registered users to lists.
+Integrate <a href="http://bit.ly/mad-mimi" rel="nofollow">Mad Mimi</a> with your WordPress website: includes signup form widgets and automatically adding registered users to lists.
 
 == Description ==
 
@@ -92,6 +92,9 @@ You can also modify the error message by hooking into `mad_mimi_signup_form_erro
 
 == Changelog ==
 
+= 1.4.3 = 
+* Fixed issue with user registrations not being properly added to lists.
+
 = 1.4.2 =
 * Fixed potential bug on line 368 of `madmimi-widget.php`, as reported by <a href="http://hacklab.com.br">Leo Germani</a>. Thanks again, Leo!
 
@@ -152,6 +155,9 @@ Structural improvements in Version 1.3 are thanks to <a href="http://hacklab.com
 * Initial plugin release
 
 == Upgrade Notice ==
+
+= 1.4.3 = 
+* Fixed issue with user registrations not being properly added to lists. Very important if you want this functionality to function!
 
 = 1.4.2 =
 * Fixed potential bug on line 368 of `madmimi-widget.php`, as reported by <a href="http://hacklab.com.br">Leo Germani</a>. Thanks again, Leo!
