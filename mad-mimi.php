@@ -4,7 +4,7 @@ Plugin Name: Mad Mimi for WordPress
 Plugin URI: http://www.seodenver.com/mad-mimi/
 Description: Add a Mad Mimi signup form to your WordPress website.
 Author: Katz Web Services, Inc.
-Version: 1.4.3
+Version: 1.4.4
 Author URI: http://www.katzwebservices.com
 */
 
@@ -359,7 +359,7 @@ class KWSMadMimi {
     function add_users_to_list($signup=false, $list=false) {
     	$csv_data = $this->process_emails($signup,$list); 
 
-    	$url = 'http://madmimi.com/audience_members';
+    	$url = 'http://api.madmimi.com/audience_members';
         
         // Converted to wp_remote_post from curl in 1.4 for better compatibility
         $body = array('username'=>$this->username,'api_key' => $this->api, 'csv_file' => $csv_data);
@@ -446,7 +446,7 @@ function madmimi_get_user_lists($force_reset = false) {
 	$options = get_option('madmimi');
 	$api = isset($options['api']) ? $options['api'] : '';
     $username = isset($options['username']) ? $options['username'] : '';
-	$url = 'http://madmimi.com/audience_lists/lists.xml?username='.$username.'&api_key='.$api;
+	$url = 'http://api.madmimi.com/audience_lists/lists.xml?username='.$username.'&api_key='.$api;
 
 	// Converted to wp_remote_get from curl in 1.4 for better compatibility
     $response = wp_remote_get($url);
