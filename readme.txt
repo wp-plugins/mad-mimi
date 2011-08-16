@@ -99,6 +99,7 @@ You can also modify the error message by hooking into `mad_mimi_signup_form_erro
 = 1.4.5 = 
 * Added debug setting to allow users to submit more detailed error reports.
 * Added notice re: <a href="http://wordpressformplugin.com?utm_source=mmapireadme">Gravity Forms</a> Mad Mimi Add-on
+* Fixed issue with form function not accepting `title=>true`, but only `title='true'` (<a href="http://wordpress.org/support/topic/578739" rel="nofollow">issue #578739</a>)
 
 = 1.4.4 = 
 * Updated API call to be more secure - prevents the <a href="http://en.wikipedia.org/wiki/Firesheep" rel="nofollow">Firesheep</a> security vulnerability over unsecured WiFi.
@@ -170,6 +171,7 @@ Structural improvements in Version 1.3 are thanks to <a href="http://hacklab.com
 = 1.4.5 = 
 * Added debug setting to allow users to submit more detailed error reports.
 * Added notice re: <a href="http://wordpressformplugin.com?utm_source=mmapi">Gravity Forms</a> Mad Mimi Add-on
+* Fixed issue with form function not accepting `title=>true`, but only `title='true'` (<a href="http://wordpress.org/support/topic/578739" rel="nofollow">issue #578739</a>)
 
 = 1.4.4 = 
 * Updated API call to be more secure - prevents the <a href="http://en.wikipedia.org/wiki/Firesheep" rel="nofollow">Firesheep</a> security vulnerability over unsecured WiFi.
