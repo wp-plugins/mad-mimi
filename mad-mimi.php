@@ -4,7 +4,7 @@ Plugin Name: Mad Mimi for WordPress
 Plugin URI: http://www.seodenver.com/mad-mimi/
 Description: Add a Mad Mimi signup form to your WordPress website.
 Author: Katz Web Services, Inc.
-Version: 1.4.4
+Version: 1.4.5
 Author URI: http://www.katzwebservices.com
 */
 
@@ -47,6 +47,7 @@ class KWSMadMimi {
         $options = get_option('madmimi');
         $this->api = isset($options['api']) ? $options['api'] : '';
         $this->username = isset($options['username']) ? $options['username'] : '';
+        $this->debug = isset($options['debug']) ? $options['debug'] : false;
         $this->new_users_list = isset($options['new_users_list']) ? $options['new_users_list'] : 0;
 		$this->settings_checked = isset($options['settings_checked']) ? $options['settings_checked'] : 0;
 		
@@ -67,7 +68,7 @@ class KWSMadMimi {
             if ($oldUser !== false) {
                 $options['username'] = $oldUser;
                 $options['api'] = get_option('mad_mimi_api');
-                
+                $options['debug'] = false;
             }            
             delete_option('mad_mimi_username');
             delete_option('mad_mimi_api');
@@ -77,7 +78,7 @@ class KWSMadMimi {
         
       	// and put this in a global too, so widgets can check it
         global $madmimi_settings_checked;
-        $madmimi_settings_checked = $options['settings_checked'];
+        $madmimi_settings_checked = isset($options['settings_checked']);
 		        
         if (!empty($this->new_users_list)) {
             add_action('user_register', array(&$this, 'user_register') );
@@ -110,7 +111,45 @@ class KWSMadMimi {
     function admin_page() {
         ?>
         <div class="wrap">
-        <h2>Mad Mimi for WordPress</h2>
+        <h2><?php _e('Mad Mimi for WordPress', 'mad-mimi'); ?></h2>
+        
+        <?php if(!get_option('hide_madmimi_message') && !isset($_REQUEST['hidemessage'])) { 
+        	flush();
+        	$message = wp_remote_get('http://www.katzwebservices.com/development/mad-mimi-info.php');
+        	if(!is_wp_error($message) && $message) { ?>
+        	<div class="wrap">
+				<div id="message" class="updated" style="background-color: #F7FCFE; border-color: #D1E5EE; padding-bottom:10px;">
+					<?php echo $message['body']; ?>
+        			<div class="clear"></div>
+				</div>
+        	</div>
+        	<?php } else { ?>
+        	<div class="wrap">
+				<div id="message" class="updated" style="background-color: #F7FCFE; border-color: #D1E5EE; padding-bottom:10px;">
+					<h3 style="font-size:140%">Have you tried <a href="http://wordpressformplugin.com?utm_source=mmapi">Gravity Forms</a>? We recommend it.</h3>
+					<p style="font-size:110%"><a href="http://wordpressformplugin.com?utm_source=mmapi" title="Gravity Forms Contact Form Plugin for WordPress"  class="alignright" style="margin-left:1em;"><img src="http://gravityforms.s3.amazonaws.com/banners/250x250.gif" alt="Gravity Forms Contact Form Plugin for WordPress" width="250" height="250" style="border:none;" /></a>Gravity Forms is a form creation tool that does amazing things. It's not just a contact form; it's a lead-tracking tool, a CRM, and more.</p>
+					<p style="font-size:110%">If you're interested in using an amazing contact form that integrates with Mad Mimi, try the new Mad Mimi Gravity Forms Add-on!</p>
+					
+					<ul class="ul-disc" style="font-size:110%">
+						<li><strong style="display:block;">Mad Mimi integration</strong> Using the <a href="http://wordpress.org/extend/plugins/gravity-forms-mad-mimi/">Gravity Forms Mad Mimi Add-on</a>, any of your Gravity Forms forms can be easily linked to your Mad Mimi account.</li>
+						<li><strong style="display:block;">Visual Form Editor</strong> Building simple and complex forms alike is a piece of cake with the easy to use form editor.</li>
+						<li><strong style="display:block;">Multi-Page Forms</strong> Make long forms easier to use by breaking them up into multiple pages, complete with progress bar.</li>
+						<li><strong style="display:block;">Order Forms</strong> Gravity Forms makes it easy to create order forms with product, option, shipping and total calculations.</li>
+						<li><strong style="display:block;">Conditional Fields</strong> Configure your form to show or hide fields, sections, pages or even the submit button based on user selections.</li>
+					</ul>
+					<h3><a href="http://wordpressformplugin.com?utm_source=mmapi">Learn more about Gravity Forms</a> - Starting at just $39</h3>
+				<p>	<a href="http://wordpressformplugin.com?utm_source=mmapi" title="Gravity Forms Contact Form Plugin for WordPress" class="button-primary button alignleft" style="font-size:120%!important;">Get Gravity Forms Today</a>
+					<a href="options-general.php?page=mad-mimi&hidemessage=true" class="button alignright">Hide this message</a>
+				</p>	
+				<div style="clear:both;"></div>
+			</div>
+		</div>
+			<? } // End if error
+        	} elseif(isset($_REQUEST['hidemessage'])) {
+        		update_option('hide_madmimi_message', true);
+        	}
+        ?>
+        
         <div class="postbox-container" style="width:65%;">
             <div class="metabox-holder">	
                 <div class="meta-box-sortables">
@@ -122,9 +161,9 @@ class KWSMadMimi {
                         if(function_exists('wp_remote_get')) { // Added 1.2.2
                         $rows[] = array(
                                 'id' => 'mad_mimi_username',
-                                'label' => 'Mad Mimi Username',
+                                'label' => __('Mad Mimi Username', 'mad-mimi'),
                                 'content' => "<input type='text' name='madmimi[username]' id='mad_mimi_username' value='".esc_attr($this->username)."' size='40' />",
-                                'desc' => 'Your Mad Mimi username (your account email address)'
+                                'desc' => __('Your Mad Mimi username (your account email address)', 'mad-mimi')
                             );
                             
                         $rows[] = array(
@@ -132,6 +171,12 @@ class KWSMadMimi {
                                 'label' => __('Mad Mimi API Key', 'mad-mimi'),
                                 'desc' => sprintf(__('Find your API Key at %s'),'<a href="https://madmimi.com/user/edit" target="_blank">https://madmimi.com/user/edit</a>'),
                                 'content' => "<input type='text' name='madmimi[api]' id='mad_mimi_api' value='".esc_attr($this->api)."' size='40' />"
+                            );
+                        $rows[] = array(
+                                'id' => 'mad_mimi_debug',
+                                'label' => __('Debug Mad Mimi', 'mad-mimi'),
+                                'desc' => __('When submitting the form, administrators will see the full data sent to Mad Mimi as well as the response.', 'mad-mimi'),
+                                'content' => "<input type='checkbox' name='madmimi[debug]' id='mad_mimi_debug' value='1' ".checked($this->debug, 1, false)."' />"
                             );
                                 
                         $this->postbox('madmimisettings',__('Mad Mimi Settings', 'mad-mimi'), $this->form_table($rows), false);
@@ -230,10 +275,10 @@ class KWSMadMimi {
             $content = __('Your server does not support <code>curl_init</code>. Please call your host and ask them to enable this functionality, which is required for this awesome plugin.', 'mad-mimi');
             echo $this->make_notice_box($content, 'error');
         } else {
-            if($this->settings_checked) {
+            if($this->settings_checked && !empty($this->api)) {
                 $content = __('Your '); if($link) { $content .= '<a href="' . admin_url( 'options-general.php?page=mad-mimi' ) . '">'; } $content .=  __('Mad Mimi account settings', 'mad-mimi'); if($link) { $content .= '</a>'; } $content .= __(' are configured properly. You\'re ready to go.'); if(!$link) { $content .= __(' <strong><a href="widgets.php">Configure your forms</a>.</strong>', 'mad-mimi'); } 
                 echo $this->make_notice_box($content, 'success');
-            } else {
+            } elseif(!empty($this->api)) {
                 $content = 'Your '; if($link) { $content .= '<a href="' . admin_url( 'options-general.php?page=mad-mimi' ) . '">'; } $content .=  __('Mad Mimi account settings', 'mad-mimi') ; if($link) { $content .= '</a>'; } $content .= '  are <strong>not configured properly</strong>.';
                 echo $this->make_notice_box($content, 'error');
             };
@@ -364,6 +409,11 @@ class KWSMadMimi {
         // Converted to wp_remote_post from curl in 1.4 for better compatibility
         $body = array('username'=>$this->username,'api_key' => $this->api, 'csv_file' => $csv_data);
         $response = wp_remote_post($url, array('body'=>$body));
+        
+        if(!empty($this->debug) && current_user_can('manage_options') && !is_admin()) {
+	        echo '<pre>'.print_r(array('Form Submission Data' => $_POST, 'Mad Mimi URL' => $url, 'What was sent to Mad Mimi' => $body, 'What did Mad Mimi send back?' => $response),true).'</pre>';
+	    }
+        
         if(!is_wp_error($response) && $response['response']['code'] == 200) { return true; } 
         
         return false;

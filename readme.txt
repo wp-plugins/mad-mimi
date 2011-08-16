@@ -1,7 +1,7 @@
 === Mad Mimi for WordPress ===
 Tags: madmimi, mad mimi, widget, newsletter, form, signup, newsletter widget, newsletter plugin, newsletters, emails, email, email newsletter form, newsletter form, newsletter signup, email widget, email marketing, newsletter, form, signup
 Requires at least: 2.8
-Tested up to: 3.1.3
+Tested up to: 3.2.1
 Stable tag: trunk
 Contributors: katzwebdesign
 Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=zackkatz%40gmail%2ecom&item_name=Mad%20Mimi%20for%20WordPress&no_shipping=0&no_note=1&tax=0&currency_code=USD&lc=US&bn=PP%2dDonationsBF&charset=UTF%2d8
@@ -12,7 +12,8 @@ Integrate <a href="http://madmimi.com/r/96bcb45a6e30b2b3381934344b10a7ce" rel="n
 
 > <strong>This plugin requires a Mad Mimi account.</strong><br /><a href="http://madmimi.com/r/96bcb45a6e30b2b3381934344b10a7ce" rel="nofollow">Sign up for a free account here</a>. Trust me, you'll like it.
 
-<h4>Get support on the <a href="http://www.seodenver.com/mad-mimi/">Mad Mimi plugin page</a></h4>
+<h3>Consider using the <a href="http://wordpress.org/extend/plugins/gravity-forms-mad-mimi/">Gravity Forms Mad Mimi Add-on</a></h3>
+The Gravity Forms Mad Mimi Add-on integrates <a href="http://wordpressformplugin.com?utm_source=mmapireadme">Gravity Forms</a> with Mad Mimi and has much more powerful form creation tools.
 
 <h3>Add Mad Mimi signup form to your WordPress website.</h3>
 
@@ -36,6 +37,9 @@ This plugin adds a Mad Mimi signup form to your website in the content and the s
 	* State
 	* ZIP
 	* Country
+
+<h4>Get support on the <a href="http://www.seodenver.com/mad-mimi/">Mad Mimi plugin page</a></h4>
+
 ### Introduction to using Mad Mimi
 [youtube http://www.youtube.com/watch?v=I8hs45fI3X8]
 
@@ -91,6 +95,10 @@ add_filter('mad_mimi_signup_form', 'my_example_function');
 You can also modify the error message by hooking into `mad_mimi_signup_form_error` in a similar manner.
 
 == Changelog ==
+
+= 1.4.5 = 
+* Added debug setting to allow users to submit more detailed error reports.
+* Added notice re: <a href="http://wordpressformplugin.com?utm_source=mmapireadme">Gravity Forms</a> Mad Mimi Add-on
 
 = 1.4.4 = 
 * Updated API call to be more secure - prevents the <a href="http://en.wikipedia.org/wiki/Firesheep" rel="nofollow">Firesheep</a> security vulnerability over unsecured WiFi.
@@ -158,6 +166,10 @@ Structural improvements in Version 1.3 are thanks to <a href="http://hacklab.com
 * Initial plugin release
 
 == Upgrade Notice ==
+
+= 1.4.5 = 
+* Added debug setting to allow users to submit more detailed error reports.
+* Added notice re: <a href="http://wordpressformplugin.com?utm_source=mmapi">Gravity Forms</a> Mad Mimi Add-on
 
 = 1.4.4 = 
 * Updated API call to be more secure - prevents the <a href="http://en.wikipedia.org/wiki/Firesheep" rel="nofollow">Firesheep</a> security vulnerability over unsecured WiFi.
