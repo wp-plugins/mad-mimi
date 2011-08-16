@@ -380,7 +380,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				if($mm_debug) { echo '<pre style="text-align:left;">'.print_r(array('args'=>$args, 'atts'=>$atts, 'settings' =>$settings[$id]), true).'</pre>'; }
 				
 				$form = new MadMimiWidget();
-				if(!isset($atts['title']) && strtolower($atts['title']) != 'false' && $atts['title'] != "0" || strtolower($atts['title']) == 'true') {
+				if(!isset($atts['title']) && strtolower($atts['title']) != 'false' && $atts['title'] != "0" || ($atts['title'] === true || strtolower($atts['title']) == 'true')) {
 					$args['title'] = $settings[$id]['title'];
 				} else {
 					$atts['title'] = false;
