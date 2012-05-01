@@ -13,7 +13,7 @@ Integrate <a href="http://madmimi.com" rel="nofollow">Mad Mimi</a> with your Wor
 > <strong>This plugin requires a Mad Mimi account.</strong><br /><a href="http://madmimi.com" rel="nofollow">Sign up for a free account here</a>. Trust me, you'll like it.
 
 <h3>Consider using the <a href="http://wordpress.org/extend/plugins/gravity-forms-mad-mimi/">Gravity Forms Mad Mimi Add-on</a></h3>
-The Gravity Forms Mad Mimi Add-on integrates <a href="http://wordpressformplugin.com?utm_source=mmapireadme">Gravity Forms</a> with Mad Mimi and has much more powerful form creation tools.
+The Gravity Forms Mad Mimi Add-on integrates <a href="http://www.gravityforms.com?r=mmapireadme">Gravity Forms</a> with Mad Mimi and has much more powerful form creation tools.
 
 <h3>Add Mad Mimi signup form to your WordPress website.</h3>
 
@@ -98,7 +98,7 @@ You can also modify the error message by hooking into `mad_mimi_signup_form_erro
 
 = 1.4.5 = 
 * Added debug setting to allow users to submit more detailed error reports.
-* Added notice re: <a href="http://wordpressformplugin.com?utm_source=mmapireadme">Gravity Forms</a> Mad Mimi Add-on
+* Added notice re: <a href="http://www.gravityforms.com?r=mmapireadme">Gravity Forms</a> Mad Mimi Add-on
 * Fixed issue with form function not accepting `title=>true`, but only `title='true'` (<a href="http://wordpress.org/support/topic/578739" rel="nofollow">issue #578739</a>)
 
 = 1.4.4 = 
