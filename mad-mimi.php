@@ -126,8 +126,8 @@ class KWSMadMimi {
         	<?php } else { ?>
         	<div class="wrap">
 				<div id="message" class="updated" style="background-color: #F7FCFE; border-color: #D1E5EE; padding-bottom:10px;">
-					<h3 style="font-size:140%">Have you tried <a href="http://wordpressformplugin.com?utm_source=mmapi">Gravity Forms</a>? We recommend it.</h3>
-					<p style="font-size:110%"><a href="http://wordpressformplugin.com?utm_source=mmapi" title="Gravity Forms Contact Form Plugin for WordPress"  class="alignright" style="margin-left:1em;"><img src="http://gravityforms.s3.amazonaws.com/banners/250x250.gif" alt="Gravity Forms Contact Form Plugin for WordPress" width="250" height="250" style="border:none;" /></a>Gravity Forms is a form creation tool that does amazing things. It's not just a contact form; it's a lead-tracking tool, a CRM, and more.</p>
+					<h3 style="font-size:140%">Have you tried <a href="http://formplugin.com?utm_source=mmapi">Gravity Forms</a>? We recommend it.</h3>
+					<p style="font-size:110%"><a href="http://formplugin.com?utm_source=mmapi" title="Gravity Forms Contact Form Plugin for WordPress"  class="alignright" style="margin-left:1em;"><img src="http://gravityforms.s3.amazonaws.com/banners/250x250.gif" alt="Gravity Forms Contact Form Plugin for WordPress" width="250" height="250" style="border:none;" /></a>Gravity Forms is a form creation tool that does amazing things. It's not just a contact form; it's a lead-tracking tool, a CRM, and more.</p>
 					<p style="font-size:110%">If you're interested in using an amazing contact form that integrates with Mad Mimi, try the new Mad Mimi Gravity Forms Add-on!</p>
 					
 					<ul class="ul-disc" style="font-size:110%">
@@ -137,8 +137,8 @@ class KWSMadMimi {
 						<li><strong style="display:block;">Order Forms</strong> Gravity Forms makes it easy to create order forms with product, option, shipping and total calculations.</li>
 						<li><strong style="display:block;">Conditional Fields</strong> Configure your form to show or hide fields, sections, pages or even the submit button based on user selections.</li>
 					</ul>
-					<h3><a href="http://wordpressformplugin.com?utm_source=mmapi">Learn more about Gravity Forms</a> - Starting at just $39</h3>
-				<p>	<a href="http://wordpressformplugin.com?utm_source=mmapi" title="Gravity Forms Contact Form Plugin for WordPress" class="button-primary button alignleft" style="font-size:120%!important;">Get Gravity Forms Today</a>
+					<h3><a href="http://formplugin.com?utm_source=mmapi">Learn more about Gravity Forms</a> - Starting at just $39</h3>
+				<p>	<a href="http://formplugin.com?utm_source=mmapi" title="Gravity Forms Contact Form Plugin for WordPress" class="button-primary button alignleft" style="font-size:120%!important;">Get Gravity Forms Today</a>
 					<a href="options-general.php?page=mad-mimi&hidemessage=true" class="button alignright">Hide this message</a>
 				</p>	
 				<div style="clear:both;"></div>

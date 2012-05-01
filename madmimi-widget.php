@@ -176,7 +176,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 	
 	 	function mimi_thank_you_link() {
 	 		mt_srand(crc32($_SERVER['REQUEST_URI'])); // Keep links the same on the same page
-	 		$urls = array(array('url'=>'http://bit.ly/mad-mimi','nofollow'=>1), array('url' => 'http://wordpress.org/extend/plugins/mad-mimi/'), array('url' => 'http://www.seodenver.com/mad-mimi/'));
+	 		$urls = array(array('url' => 'http://wordpress.org/extend/plugins/mad-mimi/'), array('url' => 'http://www.seodenver.com/mad-mimi/'));
 			$url = $urls[mt_rand(0, count($urls)-1)];
 			$link = $url['url'];
 			$nofollow = (isset($url['nofollow']) && $url['nofollow'] == 1) ? ' rel="nofollow"' : '';
