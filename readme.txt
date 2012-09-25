@@ -10,8 +10,6 @@ Integrate <a href="http://madmimi.com" rel="nofollow">Mad Mimi</a> with your Wor
 
 == Description ==
 
-> <strong>This plugin requires a Mad Mimi account.</strong><br /><a href="http://madmimi.com" rel="nofollow">Sign up for a free account here</a>. Trust me, you'll like it.
-
 <h3>Consider using the <a href="http://wordpress.org/extend/plugins/gravity-forms-mad-mimi/">Gravity Forms Mad Mimi Add-on</a></h3>
 The Gravity Forms Mad Mimi Add-on integrates <a href="http://www.gravityforms.com?r=mmapireadme">Gravity Forms</a> with Mad Mimi and has much more powerful form creation tools.
 
