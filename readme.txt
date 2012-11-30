@@ -1,19 +1,19 @@
 === Mad Mimi for WordPress ===
 Tags: madmimi, mad mimi, widget, newsletter, form, signup, newsletter widget, newsletter plugin, newsletters, emails, email, email newsletter form, newsletter form, newsletter signup, email widget, email marketing, newsletter, form, signup
 Requires at least: 2.8
-Tested up to: 3.4.2
+Tested up to: 3.5
 Stable tag: trunk
 Contributors: katzwebdesign
 Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=zackkatz%40gmail%2ecom&item_name=Mad%20Mimi%20for%20WordPress&no_shipping=0&no_note=1&tax=0&currency_code=USD&lc=US&bn=PP%2dDonationsBF&charset=UTF%2d8
 
-Integrate <a href="http://madmimi.com" rel="nofollow">Mad Mimi</a> with your WordPress website: includes signup form widgets and automatically adding registered users to lists.
+Integrate Mad Mimi with your WordPress website: includes signup form widgets and automatically adding registered users to lists.
 
 == Description ==
 
 <h3>Add Mad Mimi signup form to your WordPress website.</h3>
 
 <strong>What is Mad Mimi?</strong><br />
-Mad Mimi is a lovely, simple email service that lets you create, send and track emails. Over 32,000 businesses use <a href="http://madmimi.com" rel="nofollow">Mad Mimi</a> to handle email the simple way.
+Mad Mimi is a lovely, simple email service that lets you create, send and track emails. Over 32,000 businesses use Mad Mimi to handle email the simple way.
 
 This plugin adds a Mad Mimi signup form to your website in the content and the sidebar of your site.
 
@@ -67,10 +67,10 @@ If your web host does not support PHP5 and/or `curl`, please contact your host a
 * This plugin is released under a GPL license.
 
 = What is Mad Mimi? =
-Mad Mimi is the easiest email marketing tool out there. It's built from the ground up to be simple and usable. <a href="http://madmimi.com" rel="nofollow">Learn more about Mad Mimi</a>.
+Mad Mimi is the easiest email marketing tool out there. It's built from the ground up to be simple and usable.
 
 = Do I need a Mad Mimi account to use this plugin? =
-Yes, this plugin requires a Mad Mimi account. <a href="http://madmimi.com" rel="nofollow">Sign up for a free account here</a>.
+Yes, this plugin requires a Mad Mimi account.
 
 = How do I use the `apply_filters()` functionality? (Added 1.1) =
 If you want to change some code in the widget, you can use the WordPress `add_filter()` function to achieve this.
