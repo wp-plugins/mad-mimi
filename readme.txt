@@ -91,6 +91,10 @@ You can also modify the error message by hooking into `mad_mimi_signup_form_erro
 
 == Changelog ==
 
+= 1.5 =
+* Added: Users added in the WordPress admin are now added to lists if "Sync Users" is enabled.
+* Fixed: Some PHP warnings
+
 = 1.4.6 =
 * Fixed some PHP warnings
 * Moved including the widget file to the MadMimi class - hopefully that will solve end of file issues for some users.
