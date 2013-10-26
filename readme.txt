@@ -1,9 +1,9 @@
 === Mad Mimi for WordPress ===
 Tags: madmimi, mad mimi, widget, newsletter, form, signup, newsletter widget, newsletter plugin, newsletters, emails, email, email newsletter form, newsletter form, newsletter signup, email widget, email marketing, newsletter, form, signup
-Requires at least: 2.8
-Tested up to: 3.5
+Requires at least: 3.2
+Tested up to: 3.7
 Stable tag: trunk
-Contributors: katzwebdesign
+Contributors: katzwebdesign, katzwebservices
 Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=zackkatz%40gmail%2ecom&item_name=Mad%20Mimi%20for%20WordPress&no_shipping=0&no_note=1&tax=0&currency_code=USD&lc=US&bn=PP%2dDonationsBF&charset=UTF%2d8
 
 Integrate Mad Mimi with your WordPress website: includes signup form widgets and automatically adding registered users to lists.
@@ -91,6 +91,11 @@ You can also modify the error message by hooking into `mad_mimi_signup_form_erro
 
 == Changelog ==
 
+= 1.5.1 =
+* Fixed: Translation file location
+* Added: Some translations. <a href="https://poeditor.com/join/project?hash=951d8f975d29170e7a7c62aaa2fa22a7">Help translate the plugin!</a>
+* Fixed: PHP Notice
+
 = 1.5 =
 * Added: Users added in the WordPress admin are now added to lists if "Sync Users" is enabled.
 * Fixed: Some PHP warnings
@@ -170,6 +175,15 @@ Structural improvements in Version 1.3 are thanks to <a href="http://hacklab.com
 * Initial plugin release
 
 == Upgrade Notice ==
+
+= 1.5.1 =
+* Fixed: Translation file location
+* Added: Some translations. <a href="https://poeditor.com/join/project?hash=951d8f975d29170e7a7c62aaa2fa22a7">Help translate the plugin!</a>
+* Fixed: PHP Notice
+
+= 1.5 =
+* Added: Users added in the WordPress admin are now added to lists if "Sync Users" is enabled.
+* Fixed: Some PHP warnings
 
 = 1.4.6 =
 * Fixed some PHP warnings
